@@ -7,7 +7,7 @@
 ......
 
 * git checkout master
-git merge --squash working
-git tag <tag>
-git push --follow-tags origin master
-git push origin --delete working
+* git merge --squash working
+* git tag <tag>
+* git push --follow-tags origin master
+* git push origin --delete working
