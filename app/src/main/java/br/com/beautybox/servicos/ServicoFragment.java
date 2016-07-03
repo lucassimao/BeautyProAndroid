@@ -126,13 +126,12 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
                 }
 
                 progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Salvando novo serviço ...", true, false);
-                ServicoService service = new ServicoService();
                 Task<Void> task;
 
                 if (ref == null)
-                    task = service.save(servico);
+                    task = ServicoService.save(servico);
                 else
-                    task = service.update(ref, servico);
+                    task = ServicoService.update(ref, servico);
 
                 task.addOnCompleteListener(getActivity(), ServicoFragment.this);
             }

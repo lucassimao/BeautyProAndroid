@@ -1,12 +1,9 @@
 package br.com.beautybox.servicos;
 
-import android.database.DataSetObserver;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -32,9 +28,9 @@ import br.com.beautybox.domain.Servico;
 public class ServicosListFragment extends ListFragment {
 
     private static final String TAG = ServicosListFragment.class.getSimpleName();
-    View viewSelecionado;
 
     FirebaseListAdapter<Servico> mAdapter;
+    View viewSelecionado;
     int currentSelectedItem = -1;
     private ActionMode actionMode = null;
     private ServicosActionBarCallback callback;
@@ -57,7 +53,7 @@ public class ServicosListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = instance.getReference(Servico.FIREBASE_NODE+"LLL");
+        final DatabaseReference ref = instance.getReference(Servico.FIREBASE_NODE);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,8 +72,7 @@ public class ServicosListFragment extends ListFragment {
             public void onCancelled(DatabaseError databaseError) { }
         });
 
-        ListView listView = getListView();
-        listView.setOnItemLongClickListener(onItemLongClickListener());
+        getListView().setOnItemLongClickListener(onItemLongClickListener());
 
         callback = new ServicosActionBarCallback(this);
     }
@@ -87,7 +82,7 @@ public class ServicosListFragment extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ServicosListFragment servicosListFragment = ServicosListFragment.this;
+                ServicosListFragment fragment = ServicosListFragment.this;
 
                 if (actionMode != null) {
                     actionMode.finish();
@@ -95,19 +90,19 @@ public class ServicosListFragment extends ListFragment {
                 }
 
 //                Servico servico = mAdapter.getItem(position);
-                servicosListFragment.currentSelectedItem = position;
+                fragment.currentSelectedItem = position;
 
                 // deixando o item da lista com uma sombra para destacar
                 float[] hsv = new float[3];
-                int color = ((ColorDrawable) view.getBackground()).getColor();
+                int color = Color.WHITE;
                 Color.colorToHSV(color, hsv);
                 hsv[2] *= 0.8f; // value component
                 view.setBackgroundColor(Color.HSVToColor(hsv));
 
-                servicosListFragment.viewSelecionado = view;
+                fragment.viewSelecionado = view;
 
                 Toolbar toolBar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-                actionMode = toolBar.startActionMode(servicosListFragment.callback);
+                actionMode = toolBar.startActionMode(fragment.callback);
 
                 return true;
             }
@@ -117,7 +112,6 @@ public class ServicosListFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG,toString());
     }
 
     @Override
@@ -129,7 +123,7 @@ public class ServicosListFragment extends ListFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_servicos, menu);
+        inflater.inflate(R.menu.menu_fragment_servicos, menu);
     }
 
     @Override

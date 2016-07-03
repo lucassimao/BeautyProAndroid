@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import br.com.beautybox.agendamentos.AgendamentosListFragment;
+import br.com.beautybox.atendimentos.AtendimentosListFragment;
 import br.com.beautybox.clientes.ClientesListFragment;
 import br.com.beautybox.main.MainFragment;
 import br.com.beautybox.servicos.ServicosListFragment;
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
                     // apagando a seleção do menu lateral
                     navigationView.getMenu().findItem(R.id.nav_servicos).setChecked(false);
                     navigationView.getMenu().findItem(R.id.nav_clientes).setChecked(false);
-                    navigationView.getMenu().findItem(R.id.nav_agendamentos).setChecked(false);
+                    navigationView.getMenu().findItem(R.id.nav_atendimentos).setChecked(false);
                 }
                 else if (fr instanceof ServicosListFragment) {
                     getSupportActionBar().setTitle("Serviços");
@@ -96,9 +96,9 @@ public class MainActivity extends AppCompatActivity
                     getSupportActionBar().setTitle("Clientes");
                     navigationView.setCheckedItem(R.id.nav_clientes);
                 }
-                else if (fr instanceof AgendamentosListFragment) {
-                    getSupportActionBar().setTitle("Agendamentos");
-                    navigationView.setCheckedItem(R.id.nav_agendamentos);
+                else if (fr instanceof AtendimentosListFragment) {
+                    getSupportActionBar().setTitle("Atendimentos");
+                    navigationView.setCheckedItem(R.id.nav_atendimentos);
                 }
             }
         };
@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
 
         switch (id) {
-            case R.id.nav_agendamentos:
-                fragment = new AgendamentosListFragment();
+            case R.id.nav_atendimentos:
+                fragment = AtendimentosListFragment.newInstance();
                 break;
             case R.id.nav_servicos:
                 fragment = ServicosListFragment.newInstance();

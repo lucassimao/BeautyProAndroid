@@ -14,17 +14,16 @@ import br.com.beautybox.domain.Servico;
  */
 public class ServicoService {
 
-
-    public Task<Void> save(Servico servico){
+    public static Task<Void> save(Servico servico){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Servico.FIREBASE_NODE);
         return ref.push().setValue(servico);
     }
 
-    public Task<Void> delete(DatabaseReference ref) {
+    public static Task<Void> delete(DatabaseReference ref) {
         return ref.removeValue();
     }
 
-    public Task<Void> update(DatabaseReference ref, Servico servico) {
+    public static Task<Void> update(DatabaseReference ref, Servico servico) {
         Map<String, Object> map = new HashMap<>();
         map.put("descricao",servico.getDescricao());
         map.put("valorAVista",servico.getValorAVista());

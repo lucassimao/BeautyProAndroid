@@ -1,4 +1,4 @@
-package br.com.beautybox.servicos;
+package br.com.beautybox.atendimentos;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,30 +11,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.beautybox.R;
-import br.com.beautybox.domain.Servico;
-import br.com.beautybox.service.ServicoService;
+import br.com.beautybox.domain.Atendimento;
+import br.com.beautybox.service.AtendimentoService;
 
 /**
- * Created by lsimaocosta on 20/06/16.
+ * Created by lsimaocosta on 22/06/16.
  */
-public class ServicosActionBarCallback implements ActionMode.Callback {
+public class AtendimentosActionBarCallback implements ActionMode.Callback {
 
-    private final ServicosListFragment servicosListFragment;
+    private final AtendimentosListFragment fragment;
     private ProgressDialog progressDialog;
 
-    public ServicosActionBarCallback(ServicosListFragment servicosListFragment) {
-        this.servicosListFragment = servicosListFragment;
+    public AtendimentosActionBarCallback(AtendimentosListFragment fragment) {
+        this.fragment = fragment;
     }
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mode.getMenuInflater().inflate(R.menu.context_app_bar_servico, menu);
+        mode.getMenuInflater().inflate(R.menu.context_app_bar_atendimentos, menu);
         return true;
     }
 
@@ -45,24 +45,25 @@ public class ServicosActionBarCallback implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        FragmentActivity ctx = servicosListFragment.getActivity();
+        FragmentActivity ctx = fragment.getActivity();
         FragmentManager supportFragmentManager = ctx.getSupportFragmentManager();
-        FirebaseListAdapter<Servico> mAdapter = servicosListFragment.mAdapter;
-        DatabaseReference ref = mAdapter.getRef(servicosListFragment.currentSelectedItem);
+        Atendimento atendimento = fragment.currentSelectedItem;
+        String bucket = AtendimentoService.timestamp2Bucket(atendimento.getDataHorario());
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().
+                getReference(Atendimento.FIREBASE_NODE).child(bucket).child(atendimento.getKey()).getRef();
 
         switch (item.getItemId()) {
             case R.id.action_edit:
-                Servico servico = mAdapter.getItem(servicosListFragment.currentSelectedItem);
-                ServicoFragment servicoFragment = ServicoFragment.newInstance(servico,ref);
                 mode.finish();
-
+                AtendimentoFragment atendimentoFragment = AtendimentoFragment.newInstance(atendimento);
                 supportFragmentManager.beginTransaction().
-                        replace(R.id.fragment_container, servicoFragment, null).
+                        replace(R.id.fragment_container, atendimentoFragment, null).
                         addToBackStack(null).commit();
                 break;
             case R.id.action_delete:
-                progressDialog = ProgressDialog.show(servicosListFragment.getContext(),"Aguarde","Excluindo serviço ...",true,false);
-                ServicoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
+                progressDialog = ProgressDialog.show(ctx, "Aguarde", "Excluindo atendimento ...", true, false);
+                AtendimentoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
                 break;
             default:
                 return false;
@@ -77,20 +78,20 @@ public class ServicosActionBarCallback implements ActionMode.Callback {
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
                 mode.finish();
-                Context ctx = servicosListFragment.getActivity();
+                Context ctx = fragment.getActivity();
 
                 if (task.isSuccessful()) {
-                    Toast.makeText(ctx, "Serviço removido com sucesso", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx, "Atendimento removido com sucesso", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(ctx, "Erro :" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx, "Erro :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        servicosListFragment.currentSelectedItem = -1;
-        servicosListFragment.viewSelecionado.setBackgroundColor(Color.WHITE);
-        servicosListFragment.viewSelecionado = null;
+        fragment.currentSelectedItem = null;
+        fragment.viewSelecionado.setBackgroundColor(Color.WHITE);
+        fragment.viewSelecionado = null;
     }
 }

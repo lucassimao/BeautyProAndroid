@@ -1,5 +1,7 @@
 package br.com.beautybox.domain;
 
+import java.math.BigDecimal;
+
 /**
  * Created by lsimaocosta on 17/06/16.
  */
@@ -49,5 +51,15 @@ public class Servico {
                 ", valorAVista=" + valorAVista +
                 ", valorAPrazo=" + valorAPrazo +
                 '}';
+    }
+
+    public BigDecimal getValorAPrazoEmReais() {
+        BigDecimal _100 = BigDecimal.valueOf(100);
+        return BigDecimal.valueOf(this.valorAPrazo).divide(_100);
+    }
+
+    public BigDecimal getValorAVistaEmReais() {
+        BigDecimal _100 = BigDecimal.valueOf(100);
+        return BigDecimal.valueOf(this.valorAVista).divide(_100);
     }
 }

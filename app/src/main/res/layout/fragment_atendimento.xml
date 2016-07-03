@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="br.com.beautybox.atendimentos.AtendimentoFragment">
+
+    <LinearLayout
+        android:layout_margin="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cliente"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_cliente"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+            <!--android:drawableRight="@android:drawable/ic_menu_search" -->
+    </LinearLayout>
+
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1">
+
+        <TableRow>
+
+            <TextView
+                android:text="Data"
+                android:textStyle="bold" />
+
+            <TextView
+                android:text="Horário"
+                android:textStyle="bold" />
+
+            <TextView
+                android:text="Pagamento"
+                android:textStyle="bold" />
+
+            <TextView
+                android:text="Sessões"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/txt_view_data"
+                style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                android:text="Selecione ..." />
+
+            <TextView
+                android:id="@+id/txt_view_horario"
+                style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                android:text="Selecione ..." />
+
+            <Spinner tools:listitem="@android:layout/simple_spinner_item" android:id="@+id/spinner_forma_pagamento"/>
+            <EditText android:text="1" android:id="@+id/edit_qtde_sessoes" android:inputType="number" />
+        </TableRow>
+
+    </TableLayout>
+
+    <!-- o valor no padding é o segredo
+    p/ a borda ser renderizada -->
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:background="@drawable/listview_shape"
+        tools:listitem="@android:layout/simple_list_item_1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:id="@+id/txt_valor_total"
+        android:text="Total: R$ 0,00"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancelar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancelar" />
+
+        <Button
+            android:id="@+id/btn_salvar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Salvar" />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

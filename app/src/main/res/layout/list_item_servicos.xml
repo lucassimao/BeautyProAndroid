@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white"
+    android:background="@drawable/ripple"
     android:layout_height="match_parent"
     android:gravity="center_horizontal|center_vertical"
+    android:longClickable="true"
     android:orientation="horizontal">
 
     <TextView

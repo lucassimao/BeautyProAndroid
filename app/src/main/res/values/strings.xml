@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <plurals name="atendimentos_str">
+        <item quantity="one">1 atendimento</item>
+        <item quantity="other">%d atendimentos</item>
+    </plurals>
 </resources>
