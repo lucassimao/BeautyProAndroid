@@ -2,6 +2,7 @@ package br.com.beautybox.atendimentos;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,6 +67,7 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
         fragment.atendimento = atendimento;
         return fragment;
     }
+
 
     @Nullable
     @Override
@@ -114,7 +118,10 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) { }
+                public void onCancelled(DatabaseError databaseError) {
+                    FirebaseCrash.log("Erro ao consultar cliente " + atendimento.getClienteRef());
+                    FirebaseCrash.report(databaseError.toException());
+                }
             });
 
             TimeZone timeZone = TimeZone.getTimeZone("Etc/UTC");
@@ -225,8 +232,8 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
 
                 } catch (ParseException e) {
                     e.printStackTrace();
+                    FirebaseCrash.report(e);
                     Toast.makeText(getContext(), "A data e o horário devem ser informados", Toast.LENGTH_SHORT).show();
-
                 }
             }
         };
@@ -276,6 +283,9 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.log("Erro ao calcular valor total do atendimento");
+                FirebaseCrash.report(databaseError.toException());
+
                 txtValorTotal.setText("Total: " + numberFormat.format(0));
                 Toast.makeText(getContext(),"Erro ao calcular valor total",Toast.LENGTH_SHORT);
             }
@@ -297,9 +307,7 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {    }
         };
     }
 
@@ -352,6 +360,10 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
     @Override
     public void onPause() {
         super.onPause();
+        //Ocultando o telcado que eventualmente esteja aberto
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
         ((MainActivity) getActivity()).showDrawer();
     }
 }

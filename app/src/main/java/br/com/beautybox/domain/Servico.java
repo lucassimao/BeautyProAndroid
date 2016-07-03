@@ -14,12 +14,6 @@ public class Servico {
     public Servico() {
     }
 
-    public Servico(String descricao, long valorAVista, long valorAPrazo) {
-        this.descricao = descricao;
-        this.valorAVista = valorAVista;
-        this.valorAPrazo = valorAPrazo;
-    }
-
     public String getDescricao() {
         return descricao;
     }

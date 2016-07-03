@@ -42,8 +42,8 @@ public class ServicosAdapter extends FirebaseListAdapter<Servico> {
         onCheckedChangeListener = onCheckBoxClick();
 
         this.servicosSelecionados = new HashSet<>();
-        if (atendimento!=null){
-            for(String str: atendimento.getServicosRefs())
+        if (atendimento != null) {
+            for (String str : atendimento.getServicosRefs())
                 servicosSelecionados.add(str);
         }
     }
@@ -96,11 +96,11 @@ public class ServicosAdapter extends FirebaseListAdapter<Servico> {
         this.onServicoClickListener = onServicoClickListener;
     }
 
-    public interface OnServicoClickListener {
-        void onClick(Servico servico, DatabaseReference ref, boolean isChecked);
-    }
-
     public Set<String> getServicosSelecionados() {
         return servicosSelecionados;
+    }
+
+    public interface OnServicoClickListener {
+        void onClick(Servico servico, DatabaseReference ref, boolean isChecked);
     }
 }

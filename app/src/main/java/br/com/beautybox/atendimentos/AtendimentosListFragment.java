@@ -17,6 +17,7 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -80,6 +81,8 @@ public class AtendimentosListFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.logcat(Log.DEBUG,TAG,"Erro ao carregar atendimentos");
+                FirebaseCrash.report(databaseError.toException());
             }
         });
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -282,7 +283,8 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.d(TAG, "onCancelled");
+            FirebaseCrash.logcat(Log.DEBUG,TAG,"Erro ao carregar atendimentos");
+            FirebaseCrash.report(databaseError.toException());
         }
     }
 }
