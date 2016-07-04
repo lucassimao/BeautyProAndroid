@@ -1,6 +1,7 @@
 package br.com.beautybox.atendimentos;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
@@ -85,26 +89,49 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
         TextView txtViewHorario = (TextView) view.findViewById(R.id.txt_view_horario);
         txtViewHorario.setOnClickListener(onClickTextViewHorario());
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.spinner_forma_pagamento);
+        final Spinner spinner = (Spinner) view.findViewById(R.id.spinner_forma_pagamento);
         ArrayAdapter<FormaPagamento> formaPagamentoAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item, FormaPagamento.values());
         spinner.setAdapter(formaPagamentoAdapter);
-        spinner.setOnItemSelectedListener(onFormaPagamentoSelected());
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Servico.FIREBASE_NODE);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
 
-        ListView listView = (ListView) view.findViewById(R.id.list_view);
-        adapter = new ServicosAdapter(getActivity(), ref.orderByChild("descricao"),atendimento);
-        listView.setAdapter(adapter);
+        final ListView listView = (ListView) view.findViewById(R.id.list_view);
 
-        spinner.setSelection(0);
-        adapter.setOnServicoClickListener(onServicoClickListener());
+        final Query query = FirebaseDatabase.getInstance()
+                .getReference(Servico.FIREBASE_NODE).orderByChild("descricao");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.GONE);
+
+                adapter = new ServicosAdapter(getActivity(), query,atendimento);
+                adapter.setOnServicoClickListener(onServicoClickListener());
+                listView.setAdapter(adapter);
+
+                spinner.setOnItemSelectedListener(onFormaPagamentoSelected());
+                spinner.setSelection(0);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.log("Erro ao consultar serviços");
+                FirebaseCrash.report(databaseError.toException());
+            }
+        });
+
+
 
         Button btnSalvar = (Button) view.findViewById(R.id.btn_salvar);
         btnSalvar.setOnClickListener(onClickSalvar());
 
         Button btnCancelar = (Button) view.findViewById(R.id.btn_cancelar);
         btnCancelar.setOnClickListener(onClickCancelar());
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         // entrando no modo edição
         if (this.atendimento != null) {
@@ -144,7 +171,10 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
             editTextSessoes.setText(String.valueOf(atendimento.getSessoes()));
 
             atualizarValorTotal();
-        }
+
+            toolbar.setTitle("Editar Atendimento");
+        }else
+            toolbar.setTitle("Cadastrar Atendimento");
 
         ((MainActivity) getActivity()).hideDrawer();
 
@@ -163,7 +193,6 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 Set<String> servicosSelecionados = adapter.getServicosSelecionados();
 
@@ -215,10 +244,14 @@ public class AtendimentoFragment extends Fragment implements TimePickerDialog.On
                         atendimento.addServico(servicoKey);
 
                     Task task = AtendimentoService.save(atendimento, cliente);
+                    final ProgressDialog dialog = ProgressDialog.show(getContext(),"Aguarde","Salvando atendimento ...",true,false);
+                    dialog.show();
 
                     task.addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
+                            dialog.dismiss();
+
                             if (task.isSuccessful()) {
                                 Toast.makeText(getContext(), "Atendimento agendado!", Toast.LENGTH_SHORT).show();
                                 getFragmentManager().popBackStack();

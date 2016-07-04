@@ -8,9 +8,9 @@
     tools:context="br.com.beautybox.atendimentos.AtendimentoFragment">
 
     <LinearLayout
-        android:layout_margin="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="0dp"
         android:orientation="horizontal">
 
         <TextView
@@ -22,11 +22,10 @@
         <EditText
             android:id="@+id/edit_cliente"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
-            <!--android:drawableRight="@android:drawable/ic_menu_search" -->
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <!--android:drawableRight="@android:drawable/ic_menu_search" -->
     </LinearLayout>
-
 
 
     <TableLayout
@@ -66,29 +65,50 @@
                 style="@android:style/Widget.DeviceDefault.Light.Spinner"
                 android:text="Selecione ..." />
 
-            <Spinner tools:listitem="@android:layout/simple_spinner_item" android:id="@+id/spinner_forma_pagamento"/>
-            <EditText android:text="1" android:id="@+id/edit_qtde_sessoes" android:inputType="number" />
+            <Spinner
+                android:id="@+id/spinner_forma_pagamento"
+                tools:listitem="@android:layout/simple_spinner_item" />
+
+            <EditText
+                android:id="@+id/edit_qtde_sessoes"
+                android:inputType="number"
+                android:text="1" />
         </TableRow>
 
     </TableLayout>
 
-    <!-- o valor no padding é o segredo
-    p/ a borda ser renderizada -->
-    <ListView
-        android:id="@+id/list_view"
+    <!-- o valor no padding é o segredo  p/ a borda ser renderizada -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="5dp"
-        android:background="@drawable/listview_shape"
-        tools:listitem="@android:layout/simple_list_item_1"/>
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/listview_shape"
+            android:padding="5dp"
+            tools:listitem="@android:layout/simple_list_item_1" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:visibility="invisible"
+            android:id="@+id/progress_bar"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
 
     <TextView
+        android:id="@+id/txt_valor_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
-        android:id="@+id/txt_valor_total"
-        android:text="Total: R$ 0,00"
+        android:text="Total: R$0,00"
         android:textSize="30dp"
         android:textStyle="bold" />
 

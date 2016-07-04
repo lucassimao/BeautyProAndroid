@@ -1,5 +1,7 @@
 package br.com.beautybox.domain;
 
+import com.google.firebase.database.Exclude;
+
 import java.math.BigDecimal;
 
 /**
@@ -11,8 +13,7 @@ public class Servico {
     private long valorAVista, valorAPrazo;
 
 
-    public Servico() {
-    }
+    public Servico() { }
 
     public String getDescricao() {
         return descricao;
@@ -47,11 +48,13 @@ public class Servico {
                 '}';
     }
 
+    @Exclude
     public BigDecimal getValorAPrazoEmReais() {
         BigDecimal _100 = BigDecimal.valueOf(100);
         return BigDecimal.valueOf(this.valorAPrazo).divide(_100);
     }
 
+    @Exclude
     public BigDecimal getValorAVistaEmReais() {
         BigDecimal _100 = BigDecimal.valueOf(100);
         return BigDecimal.valueOf(this.valorAVista).divide(_100);

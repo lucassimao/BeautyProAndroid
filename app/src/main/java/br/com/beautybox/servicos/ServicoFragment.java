@@ -46,7 +46,7 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
     }
 
     public static ServicoFragment newInstance() {
-        return newInstance(null,null);
+        return newInstance(null, null);
     }
 
     @Nullable
@@ -81,11 +81,11 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
             editValorAPrazo.setText(BigDecimal.valueOf(servico.getValorAPrazo()).divide(_100).toString());
 
             toolbar.setTitle("Editar serviço");
-        }else {
+        } else {
             toolbar.setTitle("Cadastrar novo serviço");
         }
 
-        ((MainActivity)getActivity()).hideDrawer();
+        ((MainActivity) getActivity()).hideDrawer();
     }
 
     private View.OnClickListener onClickBtnSalvar() {
@@ -144,7 +144,7 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
-        ((MainActivity)getActivity()).showDrawer();
+        ((MainActivity) getActivity()).showDrawer();
     }
 
     private View.OnClickListener onClickBtnCancelar() {
@@ -164,7 +164,7 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
         if (task.isSuccessful()) {
             String text = null;
 
-            if (ref!=null && servico!=null)
+            if (ref != null && servico != null)
                 text = "Serviço atualizado com sucesso";
             else
                 text = "Serviço salvo com sucesso";

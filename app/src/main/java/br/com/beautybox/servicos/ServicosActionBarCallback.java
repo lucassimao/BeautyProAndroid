@@ -2,10 +2,13 @@ package br.com.beautybox.servicos;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 
 import br.com.beautybox.R;
+import br.com.beautybox.YesNoDialogFragment;
 import br.com.beautybox.domain.Servico;
 import br.com.beautybox.service.ServicoService;
 
@@ -44,11 +48,11 @@ public class ServicosActionBarCallback implements ActionMode.Callback {
     }
 
     @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+    public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
         FragmentActivity ctx = servicosListFragment.getActivity();
         FragmentManager supportFragmentManager = ctx.getSupportFragmentManager();
         FirebaseListAdapter<Servico> mAdapter = servicosListFragment.mAdapter;
-        DatabaseReference ref = mAdapter.getRef(servicosListFragment.currentSelectedItem);
+        final DatabaseReference ref = mAdapter.getRef(servicosListFragment.currentSelectedItem);
 
         switch (item.getItemId()) {
             case R.id.action_edit:
@@ -61,8 +65,26 @@ public class ServicosActionBarCallback implements ActionMode.Callback {
                         addToBackStack(null).commit();
                 break;
             case R.id.action_delete:
-                progressDialog = ProgressDialog.show(servicosListFragment.getContext(),"Aguarde","Excluindo serviço ...",true,false);
-                ServicoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
+
+                FragmentManager fragmentManager = servicosListFragment.getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                Fragment prev = fragmentManager.findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                YesNoDialogFragment.newInstance(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Context ctx = servicosListFragment.getContext();
+
+                        progressDialog = ProgressDialog.show(ctx,"Aguarde","Excluindo serviço ...",true,false);
+                        ServicoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
+                    }
+                }).show(fragmentManager,"dialog");
+
                 break;
             default:
                 return false;

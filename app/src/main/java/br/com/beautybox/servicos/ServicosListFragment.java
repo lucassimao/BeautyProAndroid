@@ -2,13 +2,11 @@ package br.com.beautybox.servicos;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,8 +15,8 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.beautybox.R;
@@ -44,23 +42,26 @@ public class ServicosListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fragment_list_servicos,container,false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab);
+        fab.setOnClickListener(onClickFab());
+
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = instance.getReference(Servico.FIREBASE_NODE);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        final Query query = instance.getReference(Servico.FIREBASE_NODE).orderByChild("descricao");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // seta o listadapter assim que os dados estiverem prontos, ocultando a barra de progresso
                 if (dataSnapshot.exists()){
-                    mAdapter = new ServicosAdapter(getActivity(), ref);
+                    mAdapter = new ServicosAdapter(getActivity(), query);
                     setListAdapter(mAdapter);
                 }else{
                     setListAdapter(null);
@@ -75,6 +76,17 @@ public class ServicosListFragment extends ListFragment {
         getListView().setOnItemLongClickListener(onItemLongClickListener());
 
         callback = new ServicosActionBarCallback(this);
+    }
+
+    private View.OnClickListener onClickFab() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServicoFragment servicoFragment = ServicoFragment.newInstance();
+                getActivity().getSupportFragmentManager().
+                        beginTransaction().replace(R.id.fragment_container, servicoFragment, null).addToBackStack(null).commit();
+            }
+        };
     }
 
     private AdapterView.OnItemLongClickListener onItemLongClickListener() {
@@ -120,26 +132,5 @@ public class ServicosListFragment extends ListFragment {
         if (mAdapter!=null)
             mAdapter.cleanup();
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_servicos, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_new:
-                ServicoFragment servicoFragment = ServicoFragment.newInstance();
-                getActivity().getSupportFragmentManager().
-                        beginTransaction().replace(R.id.fragment_container, servicoFragment, null).addToBackStack(null).commit();
-                break;
-            default:
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
 }

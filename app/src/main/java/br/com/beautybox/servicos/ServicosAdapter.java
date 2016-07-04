@@ -5,8 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.math.BigDecimal;
 
@@ -18,7 +17,7 @@ import br.com.beautybox.domain.Servico;
  */
 public class ServicosAdapter extends FirebaseListAdapter<Servico> {
 
-    public ServicosAdapter(Activity activity, DatabaseReference ref) {
+    public ServicosAdapter(Activity activity, Query ref) {
         super(activity, Servico.class,R.layout.list_item_servicos,ref);
     }
 

@@ -2,10 +2,13 @@ package br.com.beautybox.atendimentos;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.beautybox.R;
+import br.com.beautybox.YesNoDialogFragment;
 import br.com.beautybox.domain.Atendimento;
 import br.com.beautybox.service.AtendimentoService;
 
@@ -44,26 +48,43 @@ public class AtendimentosActionBarCallback implements ActionMode.Callback {
     }
 
     @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+    public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
         FragmentActivity ctx = fragment.getActivity();
-        FragmentManager supportFragmentManager = ctx.getSupportFragmentManager();
+        FragmentManager fragmentManager = ctx.getSupportFragmentManager();
         Atendimento atendimento = fragment.currentSelectedItem;
         String bucket = AtendimentoService.timestamp2Bucket(atendimento.getDataHorario());
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().
+        final DatabaseReference ref = FirebaseDatabase.getInstance().
                 getReference(Atendimento.FIREBASE_NODE).child(bucket).child(atendimento.getKey()).getRef();
 
         switch (item.getItemId()) {
             case R.id.action_edit:
                 mode.finish();
                 AtendimentoFragment atendimentoFragment = AtendimentoFragment.newInstance(atendimento);
-                supportFragmentManager.beginTransaction().
+                fragmentManager.beginTransaction().
                         replace(R.id.fragment_container, atendimentoFragment, null).
                         addToBackStack(null).commit();
                 break;
             case R.id.action_delete:
-                progressDialog = ProgressDialog.show(ctx, "Aguarde", "Excluindo atendimento ...", true, false);
-                AtendimentoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
+
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                Fragment prev = fragmentManager.findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                YesNoDialogFragment.newInstance(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Context ctx = fragment.getContext();
+
+                        progressDialog = ProgressDialog.show(ctx,"Aguarde","Excluindo atendimento ...",true,false);
+                        AtendimentoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
+                    }
+                }).show(fragmentManager,"dialog");
+
                 break;
             default:
                 return false;

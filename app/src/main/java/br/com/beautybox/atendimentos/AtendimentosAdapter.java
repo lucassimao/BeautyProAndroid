@@ -81,7 +81,10 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.logcat(Log.DEBUG,TAG,"Erro ao carregar serviços");
+                FirebaseCrash.report(databaseError.toException());
+            }
         });
 
         // carregando os atendimentos
@@ -182,7 +185,8 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage());
+                FirebaseCrash.logcat(Log.DEBUG, TAG, "Erro ao carregar cliente " + atendimento.getClienteRef());
+                FirebaseCrash.report(databaseError.toException());
                 textViewCliente.setText(" :: Erro ::");
             }
         });
@@ -259,8 +263,6 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Log.d(TAG, "onDataChange ");
-
             grupos = new LinkedList<>();
             atendimentos = new HashMap<>();
 

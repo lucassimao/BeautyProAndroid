@@ -2,14 +2,12 @@ package br.com.beautybox.atendimentos;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -50,13 +48,15 @@ public class AtendimentosListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_list_atendimentos, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) getView().findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(onClickFab());
 
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         String currentBucket = AtendimentoService.getCurrentBucket();
@@ -89,6 +89,17 @@ public class AtendimentosListFragment extends Fragment {
         ExpandableListView expandableListView = (ExpandableListView) getView().findViewById(R.id.expandable_list_view);
         expandableListView.setOnItemLongClickListener(onItemLongClickListener());
         callback = new AtendimentosActionBarCallback(this);
+    }
+
+    private View.OnClickListener onClickFab() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AtendimentoFragment atendimentoFragment = AtendimentoFragment.newInstance(null);
+                getActivity().getSupportFragmentManager().
+                        beginTransaction().replace(R.id.fragment_container, atendimentoFragment, null).addToBackStack(null).commit();
+            }
+        };
     }
 
     private AdapterView.OnItemLongClickListener onItemLongClickListener() {
@@ -133,29 +144,7 @@ public class AtendimentosListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onDestroy();
-        Log.d(TAG,"onPause");
         if (mAdapter != null)
             mAdapter.unregisterListeners();
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_atendimentos, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_new:
-                AtendimentoFragment atendimentoFragment = AtendimentoFragment.newInstance(null);
-                getActivity().getSupportFragmentManager().
-                        beginTransaction().replace(R.id.fragment_container, atendimentoFragment, null).addToBackStack(null).commit();
-                break;
-            default:
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
