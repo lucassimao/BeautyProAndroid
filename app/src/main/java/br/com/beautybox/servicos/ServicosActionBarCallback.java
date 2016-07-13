@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import br.com.beautybox.R;
 import br.com.beautybox.YesNoDialogFragment;
 import br.com.beautybox.domain.Servico;
-import br.com.beautybox.service.ServicoService;
+import br.com.beautybox.dao.ServicoDAO;
 
 /**
  * Created by lsimaocosta on 20/06/16.
@@ -81,7 +81,7 @@ public class ServicosActionBarCallback implements ActionMode.Callback {
                         Context ctx = servicosListFragment.getContext();
 
                         progressDialog = ProgressDialog.show(ctx,"Aguarde","Excluindo serviço ...",true,false);
-                        ServicoService.delete(ref).addOnCompleteListener(onRemoveListener(mode));
+                        ServicoDAO.delete(ref).addOnCompleteListener(onRemoveListener(mode));
                     }
                 }).show(fragmentManager,"dialog");
 

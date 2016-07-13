@@ -2,10 +2,8 @@ package br.com.beautybox.atendimentos;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.DatePicker;
 
 import java.util.Calendar;
 
@@ -16,11 +14,12 @@ public class DatePickerFragment extends DialogFragment {
 
     private DatePickerDialog.OnDateSetListener listener;
 
-    public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener){
+    public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener) {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.listener = listener;
         return datePickerFragment;
     }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker

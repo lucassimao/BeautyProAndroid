@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1">
+
+        <TableRow android:gravity="center_vertical">
+
+            <TextView
+                android:text="Data: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:text="Horário: "
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/txt_view_data"
+                style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                android:text="Selecione ..." />
+
+            <TextView
+                android:id="@+id/txt_view_horario"
+                style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                android:text="Selecione ..." />
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="5dp">
+
+            <TextView
+                android:text="Serviço:"
+                android:textStyle="bold" />
+
+            <TextView />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_servicos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:id="@+id/btn_add_servico"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_input_add" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/recycler_view"
+        android:background="@drawable/listview_shape"
+        android:padding="5dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

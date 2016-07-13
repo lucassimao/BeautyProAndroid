@@ -10,4 +10,15 @@
         <item quantity="one">1 atendimento</item>
         <item quantity="other">%d atendimentos</item>
     </plurals>
+
+    <plurals name="sessoes_str">
+        <item quantity="one">1 sessão</item>
+        <item quantity="other">%d sessões</item>
+    </plurals>
+
+    <plurals name="qtde_sessoes_validacao_msg">
+        <item quantity="one">No mínimo %1$d sessões são necessárias, mas apenas %2$d foi informada</item>
+        <item quantity="other">No mínimo %1$d sessões são necessárias, mas apenas %2$d foram informadas</item>
+    </plurals>
+
 </resources>

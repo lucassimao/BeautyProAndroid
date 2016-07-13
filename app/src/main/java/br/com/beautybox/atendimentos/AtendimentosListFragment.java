@@ -1,5 +1,6 @@
 package br.com.beautybox.atendimentos;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,13 +19,11 @@ import android.widget.Toast;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.beautybox.R;
-import br.com.beautybox.domain.Atendimento;
-import br.com.beautybox.service.AtendimentoService;
+import br.com.beautybox.dao.AtendimentoDAO;
+import br.com.beautybox.domain.Sessao;
 
 /**
  * Created by lsimaocosta on 17/06/16.
@@ -36,7 +35,7 @@ public class AtendimentosListFragment extends Fragment {
     private AtendimentosAdapter mAdapter;
     private ActionMode actionMode = null;
     private AtendimentosActionBarCallback callback;
-    Atendimento currentSelectedItem;
+    Sessao currentSelectedItem;
     View viewSelecionado;
 
     public static AtendimentosListFragment newInstance() {
@@ -58,11 +57,7 @@ public class AtendimentosListFragment extends Fragment {
         FloatingActionButton floatingActionButton = (FloatingActionButton) getView().findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(onClickFab());
 
-        FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        String currentBucket = AtendimentoService.getCurrentBucket();
-        final Query query = instance.getReference(Atendimento.FIREBASE_NODE).orderByKey().startAt(currentBucket);
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        AtendimentoDAO.list(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 View view = getView();
@@ -95,9 +90,8 @@ public class AtendimentosListFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AtendimentoFragment atendimentoFragment = AtendimentoFragment.newInstance(null);
-                getActivity().getSupportFragmentManager().
-                        beginTransaction().replace(R.id.fragment_container, atendimentoFragment, null).addToBackStack(null).commit();
+                Intent intent = new Intent(getContext(),AtendimentoActivity.class);
+                startActivity(intent);
             }
         };
     }
@@ -118,8 +112,7 @@ public class AtendimentosListFragment extends Fragment {
                         actionMode = null;
                     }
 
-                    Atendimento atendimento = (Atendimento) mAdapter.getChild(groupPosition, childPosition);
-                    fragment.currentSelectedItem = atendimento;
+                    fragment.currentSelectedItem = (Sessao) mAdapter.getChild(groupPosition, childPosition);
 
                     // deixando o item da lista com uma sombra para destacar
                     float[] hsv = new float[3];
@@ -142,7 +135,7 @@ public class AtendimentosListFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         super.onDestroy();
         if (mAdapter != null)
             mAdapter.unregisterListeners();

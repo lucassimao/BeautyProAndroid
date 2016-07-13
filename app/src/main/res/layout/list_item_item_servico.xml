@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- utilizado no listview do dialogo que edita sessoes -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="0dp"
+        android:paddingLeft="5dp"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:id="@+id/txt_servico"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/txt_quantidade"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_add_black_24dp"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/btn_minus"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_remove_black_24dp"
+        android:layout_height="wrap_content" />
+</LinearLayout>

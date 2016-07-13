@@ -1,69 +1,34 @@
 package br.com.beautybox.domain;
 
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
-
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by lsimaocosta on 22/06/16.
  */
-@IgnoreExtraProperties
-public class Atendimento {
+public class Atendimento implements Serializable {
 
-    @Exclude
     public static final transient String FIREBASE_NODE = "atendimentos";
 
     private String key;
-    private int sessoes;
-    private long dataHorario;
-    private String clienteRef;
-    private List<String> servicosRefs;
-    private long desconto;
-    private String formaPagamento;
+    private Cliente cliente;
+    private List<Sessao> sessoes;
+    private FormaPagamento formaPagamento;
+    private long pgmtCartaoDebito, pgmtCartaoCredito, pgmtDinheiro, desconto, taxas;
+    private Date dateCreated, dateUpdated;
 
     public Atendimento() {
-        this.desconto = 0;this.desconto=0;
-    }
-
-    public long getDataHorario() {
-        return dataHorario;
-    }
-
-    public void setDataHorario(long dataHorario) {
-        this.dataHorario = dataHorario;
-    }
-
-    public String getClienteRef() {
-        return clienteRef;
-    }
-
-    public void setClienteRef(String clienteRef) {
-        this.clienteRef = clienteRef;
-    }
-
-    public void addServico(String key){
-        if (this.servicosRefs == null)
-            this.servicosRefs = new LinkedList<>();
-
-        this.servicosRefs.add(key);
-    }
-
-    public int getSessoes() {
-        return sessoes;
-    }
-
-    public void setSessoes(int sessoes) {
-        this.sessoes = sessoes;
-    }
-
-    public List<String> getServicosRefs() {
-        return servicosRefs;
-    }
-
-    public void setServicosRefs(List<String> servicosRefs) {
-        this.servicosRefs = servicosRefs;
+        this.pgmtCartaoDebito = 0;
+        this.pgmtCartaoCredito = 0;
+        this.pgmtDinheiro = 0;
+        this.desconto = 0;
+        this.taxas = 0;
+        this.sessoes = new LinkedList<>();
+        this.cliente = new Cliente();
+        this.formaPagamento = FormaPagamento.AVista;
     }
 
     public long getDesconto() {
@@ -74,19 +39,14 @@ public class Atendimento {
         this.desconto = desconto;
     }
 
-    public String getFormaPagamento() {
+    public FormaPagamento getFormaPagamento() {
         return this.formaPagamento;
     }
-    public void setFormaPagamento(String formaPagamento) {
+
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
     }
 
-    @Exclude
-    public void setFormaPagamento(FormaPagamento formaPagamento) {
-        setFormaPagamento((formaPagamento!=null)?formaPagamento.name():null);
-    }
-
-    @Exclude
     public String getKey() {
         return key;
     }
@@ -95,15 +55,102 @@ public class Atendimento {
         this.key = key;
     }
 
+    public List<Sessao> getSessoes() {
+        return sessoes;
+    }
+
+    public void setSessoes(List<Sessao> sessoes) {
+        if (sessoes != null && sessoes.size() > 1)
+            Collections.sort(sessoes);
+
+        this.sessoes = sessoes;
+    }
+
+    public long getPgmtCartaoDebito() {
+        return pgmtCartaoDebito;
+    }
+
+    public void setPgmtCartaoDebito(long pgmtCartaoDebito) {
+        this.pgmtCartaoDebito = pgmtCartaoDebito;
+    }
+
+    public long getPgmtCartaoCredito() {
+        return pgmtCartaoCredito;
+    }
+
+    public void setPgmtCartaoCredito(long pgmtCartaoCredito) {
+        this.pgmtCartaoCredito = pgmtCartaoCredito;
+    }
+
+    public long getPgmtDinheiro() {
+        return pgmtDinheiro;
+    }
+
+    public void setPgmtDinheiro(long pgmtDinheiro) {
+        this.pgmtDinheiro = pgmtDinheiro;
+    }
+
+    public long getTaxas() {
+        return taxas;
+    }
+
+    public void setTaxas(long taxas) {
+        this.taxas = taxas;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Date dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
     @Override
     public String toString() {
         return "Atendimento{" +
-                "dataHorario=" + dataHorario +
-                ", clienteRef='" + clienteRef + '\'' +
-                ", servicosRefs=" + servicosRefs +
+                "key='" + key + '\'' +
+                ", cliente=" + cliente +
+                ", sessoes=" + sessoes +
+                ", formaPagamento=" + formaPagamento +
+                ", pgmtCartaoDebito=" + pgmtCartaoDebito +
+                ", pgmtCartaoCredito=" + pgmtCartaoCredito +
+                ", pgmtDinheiro=" + pgmtDinheiro +
                 ", desconto=" + desconto +
-                ", formaPagamento='" + formaPagamento + '\'' +
+                ", taxas=" + taxas +
+                ", dateCreated=" + dateCreated +
+                ", dateUpdated=" + dateUpdated +
                 '}';
     }
 
+    public long getValorTotal() {
+        long total = 0;
+        for (Sessao sessao : sessoes)
+            total += sessao.getSubTotal(this.formaPagamento);
+
+        return total;
+    }
+
+    public void addSessao(Sessao sessao) {
+        this.sessoes.add(sessao);
+
+        if (sessoes.size() > 1)
+            Collections.sort(sessoes);
+    }
 }

@@ -11,11 +11,11 @@ import android.support.v4.app.DialogFragment;
  */
 public class YesNoDialogFragment extends DialogFragment {
 
-    private DialogInterface.OnClickListener listener;
+    private DialogInterface.OnClickListener onPositiveButtonClickListener;
 
-    public static YesNoDialogFragment newInstance(DialogInterface.OnClickListener onClickListener){
+    public static YesNoDialogFragment newInstance(DialogInterface.OnClickListener onPositiveButtonClickListener){
         YesNoDialogFragment dialogFragment = new YesNoDialogFragment();
-        dialogFragment.listener = onClickListener;
+        dialogFragment.onPositiveButtonClickListener = onPositiveButtonClickListener;
         return dialogFragment;
     }
     @Override
@@ -23,7 +23,7 @@ public class YesNoDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Confirmação")
                 .setMessage("Deseja realmente remover esse registro ?")
-                .setPositiveButton("Sim",listener)
+                .setPositiveButton("Sim", onPositiveButtonClickListener)
                 .setNegativeButton("Não", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

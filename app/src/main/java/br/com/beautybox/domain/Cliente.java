@@ -3,13 +3,14 @@ package br.com.beautybox.domain;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by lsimaocosta on 22/06/16.
  */
 @IgnoreExtraProperties
-public class Cliente {
+public class Cliente implements Serializable{
 
     @Exclude
     public static final String FIREBASE_NODE = "clientes";
@@ -23,8 +24,9 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String mome) {
-        this.nome=mome;
+    public Cliente(String key, String nome) {
+        this.key = key;
+        this.nome = nome;
     }
 
     public String getNome() {

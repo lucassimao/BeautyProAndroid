@@ -2,18 +2,29 @@ package br.com.beautybox.domain;
 
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Created by lsimaocosta on 17/06/16.
  */
-public class Servico {
-    public final static transient String FIREBASE_NODE="servicos";
+public class Servico implements Serializable {
+
+    private String key;
     private String descricao;
     private long valorAVista, valorAPrazo;
+    private int qtdeSessoes;
 
 
-    public Servico() { }
+    public Servico() {
+        this.valorAVista = 0;
+        this.valorAPrazo = 0;
+        this.qtdeSessoes = 1;
+    }
+
+    public Servico(String key) {
+        this.key = key;
+    }
 
     public String getDescricao() {
         return descricao;
@@ -39,13 +50,25 @@ public class Servico {
         this.valorAPrazo = valorAPrazo;
     }
 
+    public int getQtdeSessoes() {
+        return qtdeSessoes;
+    }
+
+    public void setQtdeSessoes(int qtdeSessoes) {
+        this.qtdeSessoes = qtdeSessoes;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     @Override
     public String toString() {
-        return "Servico{" +
-                "descricao='" + descricao + '\'' +
-                ", valorAVista=" + valorAVista +
-                ", valorAPrazo=" + valorAPrazo +
-                '}';
+        return descricao;
     }
 
     @Exclude

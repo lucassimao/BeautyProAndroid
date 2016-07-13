@@ -15,11 +15,11 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.beautybox.R;
+import br.com.beautybox.dao.ServicoDAO;
 import br.com.beautybox.domain.Servico;
 
 
@@ -52,8 +52,7 @@ public class ServicosListFragment extends ListFragment {
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab);
         fab.setOnClickListener(onClickFab());
 
-        FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        final Query query = instance.getReference(Servico.FIREBASE_NODE).orderByChild("descricao");
+        final Query query = ServicoDAO.list();
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

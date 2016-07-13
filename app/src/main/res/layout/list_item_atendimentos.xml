@@ -18,14 +18,11 @@
         android:layout_alignParentLeft="true"
         android:layout_height="match_parent">
 
-<!--        <ImageView
-            android:layout_width="20dp"
-            android:src="@drawable/credit_card_icon"
-            android:layout_height="20dp" />
         <ImageView
             android:layout_width="20dp"
-            android:src="@drawable/dollar_currency_sign"
+            android:id="@+id/image_forma_pagamento"
             android:layout_height="20dp" />
+<!--
         <ImageView
             android:layout_width="20dp"
             android:src="@drawable/paperclip3_black"
@@ -53,7 +50,6 @@
         />
 
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,4 +60,12 @@
         android:layout_toEndOf="@id/linear_layout"
         android:layout_below="@id/txt_cliente"
         ></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/text_num_sessao"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/txt_horario"
+        android:layout_alignEnd="@+id/txt_horario" />
 </RelativeLayout>

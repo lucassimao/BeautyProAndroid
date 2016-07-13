@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context="br.com.beautybox.atendimentos.PagamentoFragment">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+        <TableRow>
+
+            <TextView
+                android:text="Cartão de Débito (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_cartao_debito"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="Cartão de Crédito (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_cartao_credito"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="Dinheiro (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_dinheiro"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="Desconto (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_desconto"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="Taxas (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_taxas"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
+
+    </TableLayout>
+</ScrollView>
+
+
+

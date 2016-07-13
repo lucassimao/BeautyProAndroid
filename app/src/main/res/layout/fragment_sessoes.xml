@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context="br.com.beautybox.atendimentos.AtendimentoFragment">
+
+    <TableLayout
+        android:stretchColumns="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_view_data"
+                style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selecione ..." />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Horário: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_view_horario"
+                style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selecione ..." />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_add_sessao"
+                android:src="@android:drawable/ic_input_add" />
+
+        </TableRow>
+    </TableLayout>
+
+    <!-- o valor no padding é o segredo  p/ a borda ser renderizada -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/listview_shape"
+        android:scrollbars="vertical"
+        android:padding="5dp"
+        tools:listitem="@android:layout/simple_list_item_1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="0 sessões"
+        android:id="@+id/txt_qtde_sessoes"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right" />
+
+</LinearLayout>
+
+

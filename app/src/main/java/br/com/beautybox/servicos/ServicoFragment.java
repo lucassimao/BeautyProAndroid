@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 import br.com.beautybox.MainActivity;
 import br.com.beautybox.R;
 import br.com.beautybox.domain.Servico;
-import br.com.beautybox.service.ServicoService;
+import br.com.beautybox.dao.ServicoDAO;
 
 /**
  * Created by lsimaocosta on 20/06/16.
@@ -74,8 +74,11 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
         if (servico != null) {
             EditText editValorAVista = (EditText) view.findViewById(R.id.edit_valor_a_vista);
             EditText editValorAPrazo = (EditText) view.findViewById(R.id.edit_valor_a_prazo);
+            EditText editQtdeSessoes = (EditText) view.findViewById(R.id.edit_qtde_sessoes);
+
 
             editDescricao.setText(servico.getDescricao());
+            editQtdeSessoes.setText(String.valueOf(servico.getQtdeSessoes()));
             // dividindo os valores por 100 pq sao representados em centavos
             editValorAVista.setText(BigDecimal.valueOf(servico.getValorAVista()).divide(_100).toString());
             editValorAPrazo.setText(BigDecimal.valueOf(servico.getValorAPrazo()).divide(_100).toString());
@@ -98,7 +101,7 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
 
                 String descricao = editDescricao.getText().toString();
                 if (TextUtils.isEmpty(descricao)) {
-                    Toast.makeText(getActivity(), "Informe a descrição do serviço", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Informe a descrição do serviço", Toast.LENGTH_SHORT).show();
                     editDescricao.requestFocus();
                     return;
                 }
@@ -109,7 +112,7 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
                     BigDecimal valorAVista = new BigDecimal(editValorAVista.getText().toString());
                     servico.setValorAVista(valorAVista.multiply(_100).longValue());
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getActivity(), "Informe o valor a vista", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Informe o valor a vista", Toast.LENGTH_SHORT).show();
                     editValorAVista.requestFocus();
                     return;
                 }
@@ -119,18 +122,32 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
                     BigDecimal valorAPrazo = new BigDecimal(editValorAPrazo.getText().toString());
                     servico.setValorAPrazo(valorAPrazo.multiply(_100).longValue());
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getActivity(), "Informe o valor a prazo", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Informe o valor a prazo", Toast.LENGTH_SHORT).show();
                     editValorAPrazo.requestFocus();
                     return;
                 }
+
+                EditText editQtdeSessoes = (EditText) form.findViewById(R.id.edit_qtde_sessoes);
+                try {
+
+                    Integer qtdeSessoes = Integer.valueOf(editQtdeSessoes.getText().toString());
+                    servico.setQtdeSessoes(qtdeSessoes);
+
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Informe a quantidade de sessões", Toast.LENGTH_SHORT).show();
+                    editQtdeSessoes.requestFocus();
+                    return;
+                }
+
 
                 progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Salvando novo serviço ...", true, false);
                 Task<Void> task;
 
                 if (ref == null)
-                    task = ServicoService.save(servico);
+                    task = ServicoDAO.save(servico);
                 else
-                    task = ServicoService.update(ref, servico);
+                    task = ServicoDAO.update(ref, servico);
 
                 task.addOnCompleteListener(getActivity(), ServicoFragment.this);
             }
