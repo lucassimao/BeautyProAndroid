@@ -57,10 +57,11 @@ public class Sessao implements Comparable<Sessao>,Serializable {
         long subTotal = 0;
 
         for (ItemServico itemServico : servicos) {
-            if (formaPagamento.equals(FormaPagamento.AVista))
-                subTotal += itemServico.getValorAVista()*itemServico.getQuantidade();
-            else
+            if (formaPagamento.equals(FormaPagamento.APrazo))
                 subTotal += itemServico.getValorAPrazo()*itemServico.getQuantidade();
+            else
+                subTotal += itemServico.getValorAVista()*itemServico.getQuantidade();
+
         }
 
         return subTotal;

@@ -13,7 +13,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,15 +120,29 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
         TextView textViewNomeCliente = (TextView) getView().findViewById(R.id.edit_cliente);
         textViewNomeCliente.setText(atendimento.getCliente().getNome());
 
-        final RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radio_group_forma_pagamento);
+        Spinner spinnerFormaPagamento = (Spinner) view.findViewById(R.id.spinner_forma_pagamento);
+        spinnerFormaPagamento.setAdapter(new ArrayAdapter<FormaPagamento>(getActivity(),
+                android.R.layout.simple_list_item_1, FormaPagamento.values()));
 
         FormaPagamento formaPagamento = atendimento.getFormaPagamento();
-        if (formaPagamento.equals(FormaPagamento.AVista))
-            radioGroup.check(R.id.radio_a_vista);
-        else
-            radioGroup.check(R.id.radio_a_prazo);
+        int index = 0;
+        switch (formaPagamento) {
+            case AVista:
+                index = 0;
+                break;
+            case APrazo:
+                index = 1;
+                break;
+            case Debito:
+                index = 2;
+                break;
+            case APrazo1X:
+                index = 3;
+                break;
+        }
+        spinnerFormaPagamento.setSelection(index);
+        spinnerFormaPagamento.setOnItemSelectedListener(onSelectFormaPagamento());
 
-        radioGroup.setOnCheckedChangeListener(onFormaPagamentoChecked());
 
         adapter = new SessoesAdapter(getActivity(), atendimento, onEditSessaoListener);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -143,6 +159,24 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         atualizarValorTotal();
+    }
+
+    private AdapterView.OnItemSelectedListener onSelectFormaPagamento() {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                FormaPagamento[] values = FormaPagamento.values();
+                FormaPagamento fp = values[position];
+
+                atendimento.setFormaPagamento(fp);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
     }
 
     /**
@@ -175,29 +209,13 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
 
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
         TextView txtValorTotal = (TextView) getView().findViewById(R.id.txt_valor_total);
-        RadioGroup radioGroup = (RadioGroup) getView().findViewById(R.id.radio_group_forma_pagamento);
+        Spinner spinnerFormaPagamento = (Spinner) getView().findViewById(R.id.spinner_forma_pagamento);
 
-        FormaPagamento formaPagamento = (radioGroup.getCheckedRadioButtonId() == R.id.radio_a_vista) ?
-                FormaPagamento.AVista : FormaPagamento.APrazo;
+        FormaPagamento formaPagamento = (FormaPagamento) spinnerFormaPagamento.getSelectedItem();
 
         atendimento.setFormaPagamento(formaPagamento);
 
         txtValorTotal.setText(numberFormat.format(atendimento.getValorTotal() / 100.0));
-    }
-
-    private RadioGroup.OnCheckedChangeListener onFormaPagamentoChecked() {
-        return new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                FormaPagamento fp = (group.getCheckedRadioButtonId() == R.id.radio_a_vista) ?
-                        FormaPagamento.AVista : FormaPagamento.APrazo;
-
-                atendimento.setFormaPagamento(fp);
-
-                adapter.notifyDataSetChanged();
-            }
-        };
     }
 
     @Override
@@ -208,11 +226,9 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
         Cliente cliente = atendimento.getCliente();
         cliente.setNome(nomeCliente);
 
-        RadioGroup radioGroup = (RadioGroup) getView().findViewById(R.id.radio_group_forma_pagamento);
-        if (radioGroup.getCheckedRadioButtonId() == R.id.radio_a_vista)
-            atendimento.setFormaPagamento(FormaPagamento.AVista);
-        else
-            atendimento.setFormaPagamento(FormaPagamento.APrazo);
+        Spinner spinnerFormaPagamento = (Spinner) getView().findViewById(R.id.spinner_forma_pagamento);
+        FormaPagamento formaPagamento = (FormaPagamento) spinnerFormaPagamento.getSelectedItem();
+        atendimento.setFormaPagamento(formaPagamento);
 
     }
 
