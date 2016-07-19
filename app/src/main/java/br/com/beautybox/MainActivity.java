@@ -1,5 +1,7 @@
 package br.com.beautybox;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,12 +12,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 import br.com.beautybox.atendimentos.AtendimentosListFragment;
 import br.com.beautybox.clientes.ClientesListFragment;
-import br.com.beautybox.main.MainFragment;
 import br.com.beautybox.servicos.ServicosListFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -45,6 +57,29 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView txtViewNomeUsuario = (TextView) headerView.findViewById(R.id.txt_nome_usuario);
+        txtViewNomeUsuario.setText(firebaseUser.getDisplayName());
+
+        TextView txtViewEmailUsuario = (TextView) headerView.findViewById(R.id.txt_email_usuario);
+        txtViewEmailUsuario.setText(firebaseUser.getEmail());
+
+        final ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
+        // coloca como foto a primeira q encontrar e nao for nula
+        for(UserInfo profile: firebaseUser.getProviderData()){
+            Uri photoUrl = profile.getPhotoUrl();
+
+            if (photoUrl != null) {
+                Log.d(TAG,"Utilizando a imagem " + photoUrl.toString() + " do provider " + profile.getProviderId());
+                new DownloadImageTask(imageView).execute(photoUrl.toString());
+                break;
+            }
+        }
     }
 
     public void hideDrawer(){
@@ -137,6 +172,19 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_clientes:
                 fragment = new ClientesListFragment();
                 break;
+            case R.id.nav_logoff:
+                AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // user is now signed out
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                finish();
+                            }
+                        });
+                break;
+
         }
 
         if (fragment != null)

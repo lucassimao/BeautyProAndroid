@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -42,7 +43,7 @@ public class ServicosListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list_servicos,container,false);
+        return inflater.inflate(R.layout.fragment_list_servicos, container, false);
     }
 
     @Override
@@ -58,18 +59,24 @@ public class ServicosListFragment extends ListFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // seta o listadapter assim que os dados estiverem prontos, ocultando a barra de progresso
-                if (dataSnapshot.exists()){
+                View view = getView();
+
+                if (view != null) {
                     mAdapter = new ServicosAdapter(getActivity(), query);
                     setListAdapter(mAdapter);
-                }else{
-                    setListAdapter(null);
-                    Toast.makeText(getActivity(),"Lista de serviços vazia",Toast.LENGTH_SHORT).show();
+
+                    ProgressBar progressBar = (ProgressBar) view.findViewById(android.R.id.progress);
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                    if (!dataSnapshot.exists()) {
+                        Toast.makeText(getActivity(), "Lista de serviços vazia", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
         getListView().setOnItemLongClickListener(onItemLongClickListener());
@@ -128,7 +135,7 @@ public class ServicosListFragment extends ListFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mAdapter!=null)
+        if (mAdapter != null)
             mAdapter.cleanup();
     }
 

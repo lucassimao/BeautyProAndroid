@@ -51,26 +51,35 @@ public class AtendimentosListFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) getView().findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(onClickFab());
 
+        mAdapter = new AtendimentosAdapter(getContext());
+
         AtendimentoDAO.list(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 View view = getView();
-                ProgressBar progressDialog = (ProgressBar) view.findViewById(R.id.progress_bar);
-                progressDialog.setVisibility(View.INVISIBLE);
 
-                if (dataSnapshot.exists()) {
-                    mAdapter = new AtendimentosAdapter(getContext());
+                if (view != null) {
+                    ProgressBar progressDialog = (ProgressBar) view.findViewById(R.id.progress_bar);
+                    progressDialog.setVisibility(View.INVISIBLE);
+
                     ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expandable_list_view);
                     expandableListView.setVisibility(View.VISIBLE);
                     expandableListView.setAdapter(mAdapter);
-                } else {
-                    Toast.makeText(getActivity(), "Lista de atendimentos vazia", Toast.LENGTH_SHORT).show();
+
+                    if (!dataSnapshot.exists()) {
+                        Toast.makeText(getActivity(), "Lista de atendimentos vazia", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

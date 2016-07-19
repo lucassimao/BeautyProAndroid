@@ -129,7 +129,7 @@ public class SessaoDialogFragment extends DialogFragment implements DatePickerDi
 
     private View loadView() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        SimpleDateFormat hourMInuteFormat = new SimpleDateFormat("H:mm", Locale.getDefault());
+        SimpleDateFormat hourMinuteFormat = new SimpleDateFormat("H:mm", Locale.getDefault());
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_sessao, null);
 
@@ -148,7 +148,7 @@ public class SessaoDialogFragment extends DialogFragment implements DatePickerDi
         txtViewData.setOnClickListener(onClickTextViewData());
 
         TextView txtViewHorario = (TextView) view.findViewById(R.id.txt_view_horario);
-        txtViewHorario.setText(hourMInuteFormat.format(date));
+        txtViewHorario.setText(hourMinuteFormat.format(date));
         txtViewHorario.setOnClickListener(onClickTextViewHorario());
 
         ImageButton btn = (ImageButton) view.findViewById(R.id.btn_add_servico);

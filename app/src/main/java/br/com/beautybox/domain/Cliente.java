@@ -12,9 +12,6 @@ import java.util.Date;
 @IgnoreExtraProperties
 public class Cliente implements Serializable{
 
-    @Exclude
-    public static final String FIREBASE_NODE = "clientes";
-
     private String key;
     private String nome;
     private Date dataNascimento;

@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class Atendimento implements Serializable {
 
-    public static final transient String FIREBASE_NODE = "atendimentos";
 
     private String key;
     private Cliente cliente;
@@ -144,7 +143,7 @@ public class Atendimento implements Serializable {
         for (Sessao sessao : sessoes)
             total += sessao.getSubTotal(this.formaPagamento);
 
-        return total;
+        return total - desconto;
     }
 
     public void addSessao(Sessao sessao) {

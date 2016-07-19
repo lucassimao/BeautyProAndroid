@@ -5,12 +5,12 @@ import android.text.TextUtils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.beautybox.DatabaseUtil;
 import br.com.beautybox.domain.Cliente;
 
 /**
@@ -18,9 +18,11 @@ import br.com.beautybox.domain.Cliente;
  */
 public class ClienteDAO {
 
+    public static final String FIREBASE_NODE = "clientes";
 
     public static Task<Void> save(Cliente cliente) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Cliente.FIREBASE_NODE);
+        DatabaseReference ref = DatabaseUtil.root().child(FIREBASE_NODE);
+
         if (TextUtils.isEmpty(cliente.getKey()))
             return ref.push().setValue(cliente);
         else
@@ -28,7 +30,7 @@ public class ClienteDAO {
     }
 
     public static void find(String key, ValueEventListener valueEventListener) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Cliente.FIREBASE_NODE).child(key);
+        DatabaseReference ref = DatabaseUtil.root().child(FIREBASE_NODE).child(key);
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 

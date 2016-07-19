@@ -8,8 +8,6 @@
     android:paddingRight="16dp"
     tools:context="br.com.beautybox.atendimentos.AtendimentoFragment">
 
-
-
     <TableLayout
         android:layout_width="match_parent"
         android:stretchColumns="1"

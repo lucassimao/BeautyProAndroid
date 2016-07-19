@@ -6,7 +6,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import br.com.beautybox.DatabaseUtil;
 import br.com.beautybox.domain.Atendimento;
 import br.com.beautybox.domain.Cliente;
 import br.com.beautybox.domain.FormaPagamento;
@@ -32,6 +32,7 @@ import br.com.beautybox.domain.Sessao;
  */
 public class AtendimentoDAO {
 
+    public static final transient String FIREBASE_NODE = "atendimentos";
     private static final String TAG = AtendimentoDAO.class.getSimpleName();
 
     /**
@@ -71,15 +72,14 @@ public class AtendimentoDAO {
      *
      * @return
      */
-    public static Query list(){
-       return list(null);
+    public static Query list() {
+        return list(null);
     }
 
-    public static Query list(ValueEventListener valueEventListener){
-        FirebaseDatabase instance = FirebaseDatabase.getInstance();
+    public static Query list(ValueEventListener valueEventListener) {
         String currentBucket = getCurrentBucket();
 
-        Query query = instance.getReference(Atendimento.FIREBASE_NODE).orderByKey().startAt(currentBucket);
+        Query query = DatabaseUtil.root().child(FIREBASE_NODE).orderByKey().startAt(currentBucket);
         if (valueEventListener != null)
             query.addListenerForSingleValueEvent(valueEventListener);
 
@@ -88,17 +88,17 @@ public class AtendimentoDAO {
     }
 
     public static Task<Void> save(Atendimento atendimento) {
-        DatabaseReference instance = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference instance = DatabaseUtil.root();
 
         Map<String, Object> childUpdates = new HashMap<>();
         String clienteKey = atendimento.getCliente().getKey();
 
         if (TextUtils.isEmpty(clienteKey)) {
-            clienteKey = instance.child(Cliente.FIREBASE_NODE).push().getKey();
+            clienteKey = instance.child(ClienteDAO.FIREBASE_NODE).push().getKey();
             atendimento.getCliente().setKey(clienteKey);
         }
 
-        String clientePath = String.format("/%s/%s", Cliente.FIREBASE_NODE, clienteKey);
+        String clientePath = String.format("/%s/%s", ClienteDAO.FIREBASE_NODE, clienteKey);
         childUpdates.put(clientePath, ClienteDAO.toMap(atendimento.getCliente()));
 
         if (atendimento.getDateCreated() == null)
@@ -110,9 +110,9 @@ public class AtendimentoDAO {
         String atendimentoKey = atendimento.getKey();
 
         if (TextUtils.isEmpty(atendimentoKey))
-            atendimentoKey = instance.child(Atendimento.FIREBASE_NODE).child(bucket).push().getKey();
+            atendimentoKey = instance.child(FIREBASE_NODE).child(bucket).push().getKey();
 
-        String atendimentoPath = String.format("/%s/%s/%s", Atendimento.FIREBASE_NODE, bucket, atendimentoKey);
+        String atendimentoPath = String.format("/%s/%s/%s", FIREBASE_NODE, bucket, atendimentoKey);
 
         childUpdates.put(atendimentoPath, toMap(atendimento));
 
@@ -134,7 +134,7 @@ public class AtendimentoDAO {
         if (map.containsKey("clienteRef")) {
             FirebaseCrash.log("atendimento " + child.getKey() + " ainda utiliza a propriedade clienteRef :: Excluir ::");
             cliente.setKey(map.get("clienteRef").toString());
-        }else
+        } else
             cliente.setKey(map.get("clienteKey").toString());
 
         atendimento.setCliente(cliente);
@@ -156,7 +156,7 @@ public class AtendimentoDAO {
 
             sessoes.add(sessao);
         } else
-            sessoes = load((List<Map<String, Object>>) map.get("sessoes"),atendimento);
+            sessoes = load((List<Map<String, Object>>) map.get("sessoes"), atendimento);
 
         atendimento.setSessoes(sessoes);
 
@@ -194,15 +194,15 @@ public class AtendimentoDAO {
     private static List<Sessao> load(List<Map<String, Object>> sessoes, Atendimento atendimento) {
         List<Sessao> sessaoList = new ArrayList<>();
 
-        for(Map<String,Object> map : sessoes){
+        for (Map<String, Object> map : sessoes) {
             Sessao sessao = new Sessao();
             sessao.setAtendimento(atendimento);
 
             sessao.setTimestamp((Long) map.get("timestamp"));
 
-            List<Map<String,Object>> itens = (List<Map<String, Object>>) map.get("itens");
+            List<Map<String, Object>> itens = (List<Map<String, Object>>) map.get("itens");
 
-            for(Map<String,Object> item : itens){
+            for (Map<String, Object> item : itens) {
                 Servico servico = new Servico(item.get("servicoKey").toString());
 
                 ItemServico itemServico = new ItemServico();
@@ -227,7 +227,7 @@ public class AtendimentoDAO {
         for (Sessao sessao : atendimento.getSessoes())
             sessoes.add(toMap(sessao));
 
-        map.put("sessoes",sessoes);
+        map.put("sessoes", sessoes);
         map.put("clienteKey", atendimento.getCliente().getKey());
         map.put("formaPagamento", atendimento.getFormaPagamento().name());
         map.put("pgmtCartaoDebito", atendimento.getPgmtCartaoDebito());
@@ -251,12 +251,12 @@ public class AtendimentoDAO {
     private static Map<String, Object> toMap(Sessao sessao) {
         Map<String, Object> map = new HashMap<>();
 
-        List<Map<String,Object>> itens = new LinkedList<>();
-        for(ItemServico itemServico : sessao.getServicos())
+        List<Map<String, Object>> itens = new LinkedList<>();
+        for (ItemServico itemServico : sessao.getServicos())
             itens.add(toMap(itemServico));
 
-        map.put("itens",itens);
-        map.put("timestamp",sessao.getTimestamp());
+        map.put("itens", itens);
+        map.put("timestamp", sessao.getTimestamp());
 
         return map;
     }
@@ -264,19 +264,17 @@ public class AtendimentoDAO {
     private static Map<String, Object> toMap(ItemServico itemServico) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("valorAPrazo",itemServico.getValorAPrazo());
-        map.put("valorAVista",itemServico.getValorAVista());
-        map.put("servicoKey",itemServico.getServico().getKey());
-        map.put("quantidade",itemServico.getQuantidade());
+        map.put("valorAPrazo", itemServico.getValorAPrazo());
+        map.put("valorAVista", itemServico.getValorAVista());
+        map.put("servicoKey", itemServico.getServico().getKey());
+        map.put("quantidade", itemServico.getQuantidade());
 
         return map;
     }
 
     public static DatabaseReference getRef(Atendimento atendimento) {
         String bucket = date2Bucket(atendimento.getDateCreated());
-
-        return FirebaseDatabase.getInstance()
-                .getReference(Atendimento.FIREBASE_NODE)
-                .child(bucket).child(atendimento.getKey()).getRef();
+        return DatabaseUtil.root().child(FIREBASE_NODE).child(bucket).child(atendimento.getKey()).getRef();
     }
+
 }

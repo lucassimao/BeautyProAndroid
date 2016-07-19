@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">Beauty Box</string>
+    <string translatable="false" name="app_name">BeautyPRO</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string translatable="false" name="navigation_drawer_open">Open navigation drawer</string>
+    <string translatable="false" name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="sign_in_with_google">Usar conta do Google</string>
+    <string name="email_button_text">Entrar</string>
 
     <plurals name="atendimentos_str">
         <item quantity="one">1 atendimento</item>

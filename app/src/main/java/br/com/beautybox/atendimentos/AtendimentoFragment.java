@@ -1,6 +1,5 @@
 package br.com.beautybox.atendimentos;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,7 +13,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,16 +132,7 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
         SessaoDialogFragment.newInstance(sessao, onAdicionarSessaoListener).show(fragmentManager, "dialog");
     }
 
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //Ocultando o teclado que eventualmente esteja aberto
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-    }
-
-    private void atualizarValorTotal() {
+    void atualizarValorTotal() {
 
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
         TextView txtValorTotal = (TextView) getView().findViewById(R.id.txt_valor_total);
@@ -204,6 +193,5 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
 
         return true;
     }
-
 
 }

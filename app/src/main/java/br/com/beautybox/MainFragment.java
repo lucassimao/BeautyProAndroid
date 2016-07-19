@@ -1,12 +1,10 @@
-package br.com.beautybox.main;
+package br.com.beautybox;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import br.com.beautybox.R;
 
 /**
  * Created by lsimaocosta on 17/06/16.

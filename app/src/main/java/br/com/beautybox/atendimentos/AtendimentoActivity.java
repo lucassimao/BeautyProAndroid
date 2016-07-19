@@ -46,6 +46,7 @@ public class AtendimentoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atendimento);
+
         servicoMap = new HashMap<>();
 
         ServicoDAO.list(new ValueEventListener() {
@@ -82,21 +83,13 @@ public class AtendimentoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        PagerAdapter pagerAdapter = new AtendimentoPagerAdapter(getSupportFragmentManager(), atendimento);
-
+        final PagerAdapter pagerAdapter = new AtendimentoPagerAdapter(getSupportFragmentManager(), atendimento);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         final ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(pagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                //Ocultando o teclado que eventualmente esteja aberto
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            }
-        });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.addOnPageChangeListener(onPageStateChange((AtendimentoPagerAdapter) pagerAdapter));
+
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setCurrentItem(0);
@@ -111,7 +104,53 @@ public class AtendimentoActivity extends AppCompatActivity {
 
         Button btnCancelar = (Button) findViewById(R.id.btn_cancelar);
         btnCancelar.setOnClickListener(onClickCancelar());
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideKeyboard();
+    }
+
+    @NonNull
+    private ViewPager.SimpleOnPageChangeListener onPageStateChange(final AtendimentoPagerAdapter pagerAdapter) {
+
+        return new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                hideKeyboard();
+
+                // se estiver vindo da Tab #1, manda gravar os dados no objeto atendimento p/ recalcular o valor total
+                int atendimentoFragmentIdx = 0;
+                if (position == atendimentoFragmentIdx) {
+                    AtendimentoPagerAdapter pagerAdapter1 = pagerAdapter;
+                    AtendimentoTabListener listener = (AtendimentoTabListener) pagerAdapter1.getItem(1);
+
+                    if (listener.validate()) {
+                        listener.writeChanges();
+                        AtendimentoFragment fragment = (AtendimentoFragment) pagerAdapter1.getItem(atendimentoFragmentIdx);
+                        fragment.atualizarValorTotal();
+                    } else {
+                        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+                        tabLayout.getTabAt(position).select();
+                    }
+
+                }
+            }
+        };
     }
 
     private View.OnClickListener onClickCancelar() {
@@ -168,14 +207,8 @@ public class AtendimentoActivity extends AppCompatActivity {
         };
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 }

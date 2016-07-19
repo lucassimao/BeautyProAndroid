@@ -21,6 +21,7 @@ import br.com.beautybox.domain.Atendimento;
 
 public class PagamentoFragment extends Fragment implements AtendimentoTabListener {
 
+    private static final String TAG = PagamentoFragment.class.getSimpleName();
     private Atendimento atendimento;
 
     public static PagamentoFragment newInstance(Atendimento atendimento) {
@@ -133,4 +134,5 @@ public class PagamentoFragment extends Fragment implements AtendimentoTabListene
 
         return true;
     }
+
 }

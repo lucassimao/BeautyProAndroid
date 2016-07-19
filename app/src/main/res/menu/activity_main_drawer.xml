@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_atendimentos"
-            android:icon="@drawable/ic_assignment_turned_in_black_24dp"
+            android:icon="@drawable/ic_event_black_24dp"
             android:title="Atendimentos" />
         <item
             android:id="@+id/nav_servicos"
@@ -14,20 +14,25 @@
             android:id="@+id/nav_clientes"
             android:icon="@drawable/ic_assignment_ind_black_24dp"
             android:title="Clientes" />
-
+    </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logoff"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Sair" />
     </group>
 
-<!--    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>-->
+    <!--    <item android:title="Communicate">
+            <menu>
+                <item
+                    android:id="@+id/nav_share"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Share" />
+                <item
+                    android:id="@+id/nav_send"
+                    android:icon="@drawable/ic_menu_send"
+                    android:title="Send" />
+            </menu>
+        </item>-->
 
 </menu>

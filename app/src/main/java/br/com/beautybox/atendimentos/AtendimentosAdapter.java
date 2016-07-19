@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -74,11 +73,10 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
         grupos = new ArrayList<>();
         sessoes = new HashMap<>();
 
-        groupFormatter = new SimpleDateFormat("dd/MM/yyyy - EEEE", Locale.getDefault());
-        hourFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        groupFormatter = new SimpleDateFormat("dd/MM/yyyy - EEEE");
+        hourFormatter = new SimpleDateFormat("HH:mm");
 
         groupFormatter.setTimeZone(timeZone);
-        hourFormatter.setTimeZone(timeZone);
 
         // carregando os serviços previamente
         ServicoDAO.list(new ValueEventListener() {

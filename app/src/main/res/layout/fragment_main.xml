@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:layout_marginRight="16dp"
     android:gravity="center_vertical|center_horizontal"
-    tools:context="br.com.beautybox.main.MainFragment">
+    tools:context=".MainFragment">
 
     <TextView
         android:layout_width="wrap_content" android:text="Resumo do dia"
