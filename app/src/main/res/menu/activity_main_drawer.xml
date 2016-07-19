@@ -10,10 +10,15 @@
             android:id="@+id/nav_servicos"
             android:icon="@drawable/ic_spa_black_24dp"
             android:title="Serviços" />
+
         <item
+            android:id="@+id/nav_caixa"
+            android:icon="@drawable/ic_assignment_ind_black_24dp"
+            android:title="Caixa" />
+<!--        <item
             android:id="@+id/nav_clientes"
             android:icon="@drawable/ic_assignment_ind_black_24dp"
-            android:title="Clientes" />
+            android:title="Clientes" />-->
     </group>
     <group android:checkableBehavior="single">
         <item

@@ -10,14 +10,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import br.com.beautybox.DatabaseUtil;
 import br.com.beautybox.domain.Atendimento;
@@ -42,28 +39,7 @@ public class AtendimentoDAO {
      * @return
      */
     public static final String getCurrentBucket() {
-        return date2Bucket(new Date());
-    }
-
-    /**
-     * Dado uma data, determina o timestamp do bucket em que o objeto
-     * requisitante deve ser armazenado
-     *
-     * @param date
-     * @return timestamp
-     */
-    public static final String date2Bucket(Date date) {
-        TimeZone timeZone = TimeZone.getTimeZone("Etc/UTC");
-        Calendar c = GregorianCalendar.getInstance(timeZone);
-        c.setTime(date);
-        c.set(Calendar.DAY_OF_MONTH, 1);
-        c.clear(Calendar.HOUR_OF_DAY);
-        c.clear(Calendar.HOUR);
-        c.clear(Calendar.MINUTE);
-        c.clear(Calendar.SECOND);
-        c.clear(Calendar.MILLISECOND);
-
-        return String.valueOf(c.getTimeInMillis());
+        return DatabaseUtil.date2Bucket(new Date());
     }
 
 
@@ -106,7 +82,7 @@ public class AtendimentoDAO {
         else
             atendimento.setDateUpdated(new Date());
 
-        String bucket = date2Bucket(atendimento.getDateCreated());
+        String bucket = DatabaseUtil.date2Bucket(atendimento.getDateCreated());
         String atendimentoKey = atendimento.getKey();
 
         if (TextUtils.isEmpty(atendimentoKey))
@@ -273,7 +249,7 @@ public class AtendimentoDAO {
     }
 
     public static DatabaseReference getRef(Atendimento atendimento) {
-        String bucket = date2Bucket(atendimento.getDateCreated());
+        String bucket = DatabaseUtil.date2Bucket(atendimento.getDateCreated());
         return DatabaseUtil.root().child(FIREBASE_NODE).child(bucket).child(atendimento.getKey()).getRef();
     }
 
