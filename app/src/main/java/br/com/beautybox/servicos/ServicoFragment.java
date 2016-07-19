@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,6 +71,9 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
         EditText editDescricao = (EditText) view.findViewById(R.id.edit_descricao);
         editDescricao.requestFocus();
 
+        CheckBox checkBoxIsPacote = (CheckBox) view.findViewById(R.id.check_box_is_pacote);
+        checkBoxIsPacote.setOnCheckedChangeListener(onCheckedChange());
+
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         // vai entrar no modo edição
@@ -76,9 +82,10 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
             EditText editValorAPrazo = (EditText) view.findViewById(R.id.edit_valor_a_prazo);
             EditText editQtdeSessoes = (EditText) view.findViewById(R.id.edit_qtde_sessoes);
 
-
             editDescricao.setText(servico.getDescricao());
             editQtdeSessoes.setText(String.valueOf(servico.getQtdeSessoes()));
+            checkBoxIsPacote.setChecked(servico.getQtdeSessoes() > 1);
+
             // dividindo os valores por 100 pq sao representados em centavos
             editValorAVista.setText(BigDecimal.valueOf(servico.getValorAVista()).divide(_100).toString());
             editValorAPrazo.setText(BigDecimal.valueOf(servico.getValorAPrazo()).divide(_100).toString());
@@ -89,6 +96,25 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
         }
 
         ((MainActivity) getActivity()).hideDrawer();
+    }
+
+    private CompoundButton.OnCheckedChangeListener onCheckedChange() {
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                View view = getView();
+                EditText editQtdeSessoes = (EditText) view.findViewById(R.id.edit_qtde_sessoes);
+                TextView text = (TextView) view.findViewById(R.id.txt_view_sessoes);
+
+                if (isChecked){
+                    editQtdeSessoes.setVisibility(View.VISIBLE);
+                    text.setVisibility(View.VISIBLE);
+                }else{
+                    editQtdeSessoes.setVisibility(View.INVISIBLE);
+                    text.setVisibility(View.INVISIBLE);
+                }
+            }
+        };
     }
 
     private View.OnClickListener onClickBtnSalvar() {
@@ -128,9 +154,13 @@ public class ServicoFragment extends Fragment implements OnCompleteListener<Void
                 }
 
                 EditText editQtdeSessoes = (EditText) form.findViewById(R.id.edit_qtde_sessoes);
+                CheckBox checkBoxIsPacote = (CheckBox) form.findViewById(R.id.check_box_is_pacote);
                 try {
+                    Integer qtdeSessoes = 1;
 
-                    Integer qtdeSessoes = Integer.valueOf(editQtdeSessoes.getText().toString());
+                    if (checkBoxIsPacote.isChecked())
+                        qtdeSessoes = Integer.valueOf(editQtdeSessoes.getText().toString());
+
                     servico.setQtdeSessoes(qtdeSessoes);
 
                 } catch (NumberFormatException e) {

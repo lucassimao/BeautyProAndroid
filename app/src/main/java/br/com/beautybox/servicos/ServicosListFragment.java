@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -76,6 +77,7 @@ public class ServicosListFragment extends ListFragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(databaseError.toException());
             }
         });
 

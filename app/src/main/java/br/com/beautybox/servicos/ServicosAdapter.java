@@ -28,6 +28,14 @@ public class ServicosAdapter extends FirebaseListAdapter<Servico> {
         TextView txtServico = (TextView) view.findViewById(R.id.txt_servico);
         txtServico.setText(servico.getDescricao());
 
+        TextView txtQtdeSessoes = (TextView) view.findViewById(R.id.txt_qtde_sessoes);
+        if (servico.getQtdeSessoes() > 1) {
+            txtQtdeSessoes.setVisibility(View.VISIBLE);
+            txtQtdeSessoes.setText(servico.getQtdeSessoes() + " sessões");
+        }else {
+            txtQtdeSessoes.setVisibility(View.GONE);
+        }
+
         final BigDecimal valorAVistaEmCentavos = BigDecimal.valueOf(servico.getValorAVista());
         TextView txtValorAVista = (TextView) view.findViewById(R.id.txt_valor_a_vista);
         txtValorAVista.setText("R$ " + valorAVistaEmCentavos.divide(_100).toString());
@@ -35,6 +43,5 @@ public class ServicosAdapter extends FirebaseListAdapter<Servico> {
         final BigDecimal valorAPrazoEmCentavos = BigDecimal.valueOf(servico.getValorAPrazo());
         TextView txtValorAPrazo = (TextView) view.findViewById(R.id.txt_valor_a_prazo);
         txtValorAPrazo.setText("R$ " + valorAPrazoEmCentavos.divide(_100).toString());
-
     }
 }
