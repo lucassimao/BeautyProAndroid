@@ -12,17 +12,19 @@ public class ItemServico implements Serializable {
     private Servico servico;
     private int quantidade;
 
-    public ItemServico(Servico servico, int quantidade) {
+    public ItemServico(Servico servico, int quantidade,long valorAPrazo,long valorAVista) {
         this.servico = servico;
         this.quantidade = quantidade;
-        this.valorAPrazo = servico.getValorAPrazo();
-        this.valorAVista = servico.getValorAVista();
+        this.valorAPrazo = valorAPrazo;
+        this.valorAVista = valorAVista;
+    }
+
+    public ItemServico(Servico servico, int quantidade) {
+        this(servico,quantidade,servico.getValorAPrazo(),servico.getValorAVista());
     }
 
     public ItemServico() {
-        this.quantidade = 0;
-        this.valorAPrazo = 0;
-        this.valorAVista = 0;
+        this(null,0,0,0);
     }
 
     public Servico getServico() {

@@ -18,12 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import br.com.beautybox.R;
 import br.com.beautybox.domain.Atendimento;
 import br.com.beautybox.domain.Cliente;
 import br.com.beautybox.domain.FormaPagamento;
+import br.com.beautybox.domain.ItemServico;
+import br.com.beautybox.domain.Servico;
 import br.com.beautybox.domain.Sessao;
 
 /**
@@ -42,8 +48,41 @@ public class AtendimentoFragment extends Fragment implements AtendimentoTabListe
 
             // so manda adicionar caso nao esteja no modo edição,
             // pq se estiver editando o objeto ja esta na lista de sessões do atendimento
-            if (!isEditing)
+            if (!isEditing) {
                 atendimento.addSessao(sessao);
+
+                if (sessao.getServicos().size() == 1) {
+
+                    ItemServico itemServico = sessao.getServicos().get(0);
+
+                    Servico servico = itemServico.getServico();
+                    int qtdeSessoes = itemServico.getServico().getQtdeSessoes();
+                    int qtde = itemServico.getQuantidade();
+
+                    boolean isPacote = (qtdeSessoes > 1) && (qtde == 1);
+
+                    if (isPacote) {
+                        Calendar c = new GregorianCalendar();
+                        c.setTimeInMillis(sessao.getTimestamp());
+
+                        for (int i = 0; i < qtdeSessoes - 1; ++i) {
+                            c.add(Calendar.DAY_OF_MONTH, 1);
+
+                            Sessao novaSessao = new Sessao();
+                            novaSessao.setAtendimento(atendimento);
+                            novaSessao.setTimestamp(c.getTime().getTime());
+
+                            List<ItemServico> itens = new ArrayList<>();
+                            ItemServico item = new ItemServico(servico, 1, 0, 0);
+                            itens.add(item);
+
+                            novaSessao.setServicos(itens);
+
+                            atendimento.addSessao(novaSessao);
+                        }
+                    }
+                }
+            }
 
             Collections.sort(atendimento.getSessoes());
             adapter.notifyDataSetChanged();
