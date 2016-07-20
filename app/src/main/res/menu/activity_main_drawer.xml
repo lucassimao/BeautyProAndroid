@@ -13,7 +13,7 @@
 
         <item
             android:id="@+id/nav_caixa"
-            android:icon="@drawable/ic_assignment_ind_black_24dp"
+            android:icon="@drawable/ic_monetization_on_black_48dp"
             android:title="Caixa" />
 <!--        <item
             android:id="@+id/nav_clientes"

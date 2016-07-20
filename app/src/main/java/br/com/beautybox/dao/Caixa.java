@@ -1,4 +1,4 @@
-package br.com.beautybox.domain;
+package br.com.beautybox.dao;
 
 import android.text.TextUtils;
 
@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.beautybox.DatabaseUtil;
+import br.com.beautybox.domain.MovimentoCaixa;
 
 /**
  * Created by lsimaocosta on 19/07/16.
@@ -47,9 +48,11 @@ public class Caixa {
     private static Map<String, Object> toMap(MovimentoCaixa movimentoCaixa) {
         Map<String,Object> map = new HashMap<>();
         map.put("valores",movimentoCaixa.getValores());
+        map.put("descricao",movimentoCaixa.getDescricao());
         map.put("atendimentoKey",movimentoCaixa.getAtendimentoKey());
         map.put("taxas",movimentoCaixa.getTaxas());
         map.put("positivo",movimentoCaixa.isPositivo());
+        map.put("data",movimentoCaixa.getData().getTime());
         return map;
     }
 }

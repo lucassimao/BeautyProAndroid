@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- layout dos itens no listview do CaixaListFragment -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/ripple"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal|center_vertical"
+    android:longClickable="true"
+    android:orientation="horizontal">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/txt_descricao"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_below="@id/txt_descricao"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/txt_data"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/txt_valor"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

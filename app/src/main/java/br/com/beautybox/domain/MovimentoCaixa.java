@@ -1,5 +1,7 @@
 package br.com.beautybox.domain;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +10,9 @@ import java.util.Map;
  */
 public class MovimentoCaixa {
     private String key;
-    private Map<FormaPagamento, Long> valores;
+    private Date data;
+    private String descricao;
+    private Map<String, Long> valores;
     private String atendimentoKey;
     private long taxas;
     private boolean positivo;
@@ -51,25 +55,39 @@ public class MovimentoCaixa {
         this.positivo = positivo;
     }
 
-    public Map<FormaPagamento, Long> getValores() {
-        return valores;
+    public Map<String, Long> getValores() {
+        return Collections.unmodifiableMap(valores);
     }
 
-    public void setValores(Map<FormaPagamento, Long> valores) {
-        this.valores = valores;
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 
     public void addValor(FormaPagamento formaPagamento, long valor) {
-        if (valores.containsKey(formaPagamento)) {
-            valor += valores.get(formaPagamento);
-            valores.put(formaPagamento, valor);
+        String key = formaPagamento.name();
+
+        if (valores.containsKey(key)) {
+            valor += valores.get(key);
+            valores.put(key, valor);
         } else
-            valores.put(formaPagamento, valor);
+            valores.put(key, valor);
     }
 
     public long getTotal() {
         long total = 0;
-        for (FormaPagamento formaPagamento : valores.keySet())
+        for (String formaPagamento : valores.keySet())
             total += valores.get(formaPagamento);
 
         return total;
