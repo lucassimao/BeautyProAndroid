@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- layout dos itens no listview do CaixaListFragment -->
+<!-- layout dos itens no listview do MovimentoCaixaListFragment -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:padding="16dp"
@@ -13,6 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/txt_descricao"
+        android:textStyle="bold"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_height="wrap_content" />

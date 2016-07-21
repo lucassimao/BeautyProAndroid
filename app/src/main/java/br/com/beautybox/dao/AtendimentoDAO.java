@@ -36,14 +36,6 @@ public class AtendimentoDAO {
      * os atendimentos são organizados a partir de "buckets" que
      * representam organizam os atendimentos por mes e ano
      *
-     * @return
-     */
-    public static final String getCurrentBucket() {
-        return DatabaseUtil.date2Bucket(new Date());
-    }
-
-
-    /**
      * Lista os atendimentos do bucket atual
      *
      * @return
@@ -53,14 +45,13 @@ public class AtendimentoDAO {
     }
 
     public static Query list(ValueEventListener valueEventListener) {
-        String currentBucket = getCurrentBucket();
+        String currentBucket = DatabaseUtil.date2Bucket(new Date());
 
         Query query = DatabaseUtil.root().child(FIREBASE_NODE).orderByKey().startAt(currentBucket);
         if (valueEventListener != null)
             query.addListenerForSingleValueEvent(valueEventListener);
 
         return query;
-
     }
 
     public static Task<Void> save(Atendimento atendimento) {
@@ -144,6 +135,9 @@ public class AtendimentoDAO {
         if (map.containsKey("pgmtCartaoCredito"))
             atendimento.setPgmtCartaoCredito((Long) map.get("pgmtCartaoCredito"));
 
+        if (map.containsKey("pgmtCartaoCredito1X"))
+            atendimento.setPgmtCartaoCredito1X((Long) map.get("pgmtCartaoCredito1X"));
+
         if (map.containsKey("pgmtDinheiro"))
             atendimento.setPgmtDinheiro((Long) map.get("pgmtDinheiro"));
 
@@ -208,6 +202,7 @@ public class AtendimentoDAO {
         map.put("formaPagamento", atendimento.getFormaPagamento().name());
         map.put("pgmtCartaoDebito", atendimento.getPgmtCartaoDebito());
         map.put("pgmtCartaoCredito", atendimento.getPgmtCartaoCredito());
+        map.put("pgmtCartaoCredito1X", atendimento.getPgmtCartaoCredito1X());
         map.put("pgmtDinheiro", atendimento.getPgmtDinheiro());
         map.put("desconto", atendimento.getDesconto());
         map.put("taxas", atendimento.getTaxas());

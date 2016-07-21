@@ -13,9 +13,19 @@
         android:stretchColumns="1">
 
         <TableRow>
+            <TextView
+                android:text="Dinheiro (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_dinheiro"
+                android:inputType="numberDecimal" />
+        </TableRow>
+
+        <TableRow>
 
             <TextView
-                android:text="Cartão de Débito (R$):"
+                android:text="Cartão - Débito (R$):"
                 android:textStyle="bold" />
 
             <EditText
@@ -27,7 +37,18 @@
         <TableRow>
 
             <TextView
-                android:text="Cartão de Crédito (R$):"
+                android:text="Cartão - 1x (R$):"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_cartao_credito_1x"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="Cartão - Parcelado(R$):"
                 android:textStyle="bold" />
 
             <EditText
@@ -36,17 +57,7 @@
                 android:text="0" />
         </TableRow>
 
-        <TableRow>
 
-            <TextView
-                android:text="Dinheiro (R$):"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/edit_dinheiro"
-                android:inputType="numberDecimal"
-                android:text="0" />
-        </TableRow>
 
         <TableRow>
 

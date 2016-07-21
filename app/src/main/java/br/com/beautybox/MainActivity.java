@@ -27,7 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 
 import br.com.beautybox.atendimentos.AtendimentosListFragment;
-import br.com.beautybox.caixa.CaixaListFragment;
+import br.com.beautybox.movimentoCaixa.MovimentoCaixaListFragment;
 import br.com.beautybox.servicos.ServicosListFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
                     getSupportActionBar().setTitle("Serviços");
                     navigationView.setCheckedItem(R.id.nav_servicos);
                 }
-                else if (fr instanceof CaixaListFragment) {
+                else if (fr instanceof MovimentoCaixaListFragment) {
                     getSupportActionBar().setTitle("Caixa");
                     navigationView.setCheckedItem(R.id.nav_caixa);
                 }
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = ServicosListFragment.newInstance();
                 break;
             case R.id.nav_caixa:
-                fragment = new CaixaListFragment();
+                fragment = new MovimentoCaixaListFragment();
                 break;
             case R.id.nav_logoff:
                 AuthUI.getInstance()

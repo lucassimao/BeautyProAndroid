@@ -55,6 +55,10 @@ public class MovimentoCaixa {
         this.positivo = positivo;
     }
 
+    public void setValores(Map<String, Long> valores) {
+        this.valores = valores;
+    }
+
     public Map<String, Long> getValores() {
         return Collections.unmodifiableMap(valores);
     }

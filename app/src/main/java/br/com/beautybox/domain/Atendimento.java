@@ -16,12 +16,13 @@ public class Atendimento implements Serializable {
     private Cliente cliente;
     private List<Sessao> sessoes;
     private FormaPagamento formaPagamento;
-    private long pgmtCartaoDebito, pgmtCartaoCredito, pgmtDinheiro, desconto, taxas;
+    private long pgmtCartaoDebito, pgmtCartaoCredito, pgmtCartaoCredito1X, pgmtDinheiro, desconto, taxas;
     private Date dateCreated, dateUpdated;
 
     public Atendimento() {
         this.pgmtCartaoDebito = 0;
         this.pgmtCartaoCredito = 0;
+        this.pgmtCartaoCredito1X=0;
         this.pgmtDinheiro = 0;
         this.desconto = 0;
         this.taxas = 0;
@@ -63,6 +64,14 @@ public class Atendimento implements Serializable {
             Collections.sort(sessoes);
 
         this.sessoes = sessoes;
+    }
+
+    public long getPgmtCartaoCredito1X() {
+        return pgmtCartaoCredito1X;
+    }
+
+    public void setPgmtCartaoCredito1X(long pgmtCartaoCredito1X) {
+        this.pgmtCartaoCredito1X = pgmtCartaoCredito1X;
     }
 
     public long getPgmtCartaoDebito() {

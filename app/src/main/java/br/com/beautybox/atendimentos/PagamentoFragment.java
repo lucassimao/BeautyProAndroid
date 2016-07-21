@@ -42,6 +42,7 @@ public class PagamentoFragment extends Fragment implements AtendimentoTabListene
 
         EditText editCartaoDebito = (EditText) getView().findViewById(R.id.edit_cartao_debito);
         EditText editCartaoCredito = (EditText) getView().findViewById(R.id.edit_cartao_credito);
+        EditText editCartaoCredito1X = (EditText) getView().findViewById(R.id.edit_cartao_credito_1x);
         EditText editDinheiro = (EditText) getView().findViewById(R.id.edit_dinheiro);
         EditText editDesconto = (EditText) getView().findViewById(R.id.edit_desconto);
         EditText editTaxas = (EditText) getView().findViewById(R.id.edit_taxas);
@@ -53,6 +54,7 @@ public class PagamentoFragment extends Fragment implements AtendimentoTabListene
         editCartaoCredito.setText(nf.format(atendimento.getPgmtCartaoCredito()/100.0));
         editDinheiro.setText(nf.format(atendimento.getPgmtDinheiro()/100.0));
         editDesconto.setText(nf.format(atendimento.getDesconto()/100.0));
+        editCartaoCredito1X.setText(nf.format(atendimento.getPgmtCartaoCredito1X()/100.0));
         editTaxas.setText(nf.format(atendimento.getTaxas()/100.0));
     }
 
@@ -60,6 +62,7 @@ public class PagamentoFragment extends Fragment implements AtendimentoTabListene
     public void writeChanges() {
         EditText editCartaoDebito = (EditText) getView().findViewById(R.id.edit_cartao_debito);
         EditText editCartaoCredito = (EditText) getView().findViewById(R.id.edit_cartao_credito);
+        EditText editCartaoCredito1X = (EditText) getView().findViewById(R.id.edit_cartao_credito_1x);
         EditText editDinheiro = (EditText) getView().findViewById(R.id.edit_dinheiro);
         EditText editDesconto = (EditText) getView().findViewById(R.id.edit_desconto);
         EditText editTaxas = (EditText) getView().findViewById(R.id.edit_taxas);
@@ -71,6 +74,9 @@ public class PagamentoFragment extends Fragment implements AtendimentoTabListene
 
         long pgmtCartaoCredito = new BigDecimal(editCartaoCredito.getText().toString()).multiply(_100).longValue();
         atendimento.setPgmtCartaoCredito(pgmtCartaoCredito);
+
+        long pgmtCartaoCredito1X = new BigDecimal(editCartaoCredito1X.getText().toString()).multiply(_100).longValue();
+        atendimento.setPgmtCartaoCredito1X(pgmtCartaoCredito1X);
 
         long pgmtDinheiro = new BigDecimal(editDinheiro.getText().toString()).multiply(_100).longValue();
         atendimento.setPgmtDinheiro(pgmtDinheiro);
@@ -100,6 +106,15 @@ public class PagamentoFragment extends Fragment implements AtendimentoTabListene
         } catch (Exception e) {
             Toast.makeText(getContext(), "Informe o valor do pagamento no cartão de crédito", Toast.LENGTH_SHORT).show();
             editCartaoCredito.requestFocus();
+            return false;
+        }
+
+        EditText editCartaoCredito1X = (EditText) getView().findViewById(R.id.edit_cartao_credito_1x);
+        try {
+            new BigDecimal(editCartaoCredito1X.getText().toString());
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Informe o valor do pagamento no cartão 1X", Toast.LENGTH_SHORT).show();
+            editCartaoCredito1X.requestFocus();
             return false;
         }
 
