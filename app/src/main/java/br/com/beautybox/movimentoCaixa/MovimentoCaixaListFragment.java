@@ -2,6 +2,7 @@ package br.com.beautybox.movimentoCaixa;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import br.com.beautybox.R;
 import br.com.beautybox.dao.MovimentoCaixaDAO;
+import br.com.beautybox.servicos.ServicoFragment;
 
 public class MovimentoCaixaListFragment extends ListFragment {
 
@@ -61,7 +63,11 @@ public class MovimentoCaixaListFragment extends ListFragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                MovimentoCaixaFragment movimentoCaixaFragment = MovimentoCaixaFragment.newInstance(null);
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, movimentoCaixaFragment, null)
+                        .addToBackStack(null).commit();
             }
         };
     }

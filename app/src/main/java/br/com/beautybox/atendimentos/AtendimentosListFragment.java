@@ -40,8 +40,6 @@ public class AtendimentosListFragment extends Fragment {
 
     public static AtendimentosListFragment newInstance() {
         AtendimentosListFragment fragment = new AtendimentosListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 

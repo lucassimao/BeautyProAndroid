@@ -1,4 +1,4 @@
-package br.com.beautybox.atendimentos;
+package br.com.beautybox;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

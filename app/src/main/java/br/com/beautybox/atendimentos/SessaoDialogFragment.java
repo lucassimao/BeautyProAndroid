@@ -36,7 +36,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import br.com.beautybox.DatePickerFragment;
 import br.com.beautybox.R;
+import br.com.beautybox.TimePickerFragment;
 import br.com.beautybox.dao.ServicoDAO;
 import br.com.beautybox.domain.Servico;
 import br.com.beautybox.domain.Sessao;

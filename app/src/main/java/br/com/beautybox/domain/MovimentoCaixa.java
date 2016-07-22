@@ -21,6 +21,7 @@ public class MovimentoCaixa {
         this.valores = new HashMap<>();
         this.taxas = 0;
         this.positivo = true;
+        this.data = new Date();
     }
 
     public String getAtendimentoKey() {
