@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,15 +18,6 @@
         android:layout_height="wrap_content" />
 
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,8 +27,7 @@
         <TextView
             android:id="@+id/text_data"
             style="@android:style/Widget.DeviceDefault.Light.Spinner"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:inputType="none"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="15dp"
@@ -52,6 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio_group"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <RadioButton
@@ -67,59 +60,60 @@
                 android:text="Saída" />
         </RadioGroup>
 
-    </LinearLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:stretchColumns="0,1"
+        android:layout_height="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dinheiro (R$):"
-            android:textStyle="bold" />
+        <TableRow>
+            <TextView
+                android:text="Dinheiro (R$):"
+                android:textStyle="bold" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_dinheiro"
-            android:inputType="numberDecimal" />
+            <TextView
+                android:text="Cartão - Débito (R$):"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+            <EditText
+                android:id="@+id/edit_dinheiro"
+                android:text="0"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/edit_cartao_debito"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cartão - Débito (R$):"
-            android:textStyle="bold" />
+        <TableRow>
+            <TextView
+                android:text="Cartão - 1x (R$):"
+                android:textStyle="bold" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_cartao_debito"
-            android:inputType="numberDecimal"
-            android:text="0" />
+            <TextView
+                android:text="Cartão - Parcelado(R$):"
+                android:textStyle="bold" />
+        </TableRow>
 
-        <TextView
-            android:text="Cartão - 1x (R$):"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold" />
+        <TableRow>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_cartao_credito_1x"
-            android:inputType="numberDecimal"
-            android:text="0" />
+            <EditText
+                android:id="@+id/edit_cartao_credito_1x"
+                android:inputType="numberDecimal"
+                android:text="0" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cartão - Parcelado(R$):"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_cartao_credito"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </TableRow>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_cartao_credito"
-            android:inputType="numberDecimal"
-            android:text="0" />
+
+    </TableLayout>
 
     <!-- Botões -->
 

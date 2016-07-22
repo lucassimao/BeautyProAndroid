@@ -2,6 +2,7 @@ package br.com.beautybox.movimentoCaixa;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -13,9 +14,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +28,8 @@ import java.util.GregorianCalendar;
 
 import br.com.beautybox.DatePickerFragment;
 import br.com.beautybox.R;
+import br.com.beautybox.dao.MovimentoCaixaDAO;
+import br.com.beautybox.domain.FormaPagamento;
 import br.com.beautybox.domain.MovimentoCaixa;
 
 /**
@@ -86,10 +93,15 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
                 EditText editDescricao = (EditText) view.findViewById(R.id.edit_descricao);
                 TextView textView = (TextView) view.findViewById(R.id.text_data);
                 RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radio_group);
+                EditText editDinheiro = (EditText) view.findViewById(R.id.edit_dinheiro);
+                EditText editCartaoDebito = (EditText) view.findViewById(R.id.edit_cartao_debito);
+                EditText editCredito1X = (EditText) view.findViewById(R.id.edit_cartao_credito_1x);
+                EditText editCreditoParcelado = (EditText) view.findViewById(R.id.edit_cartao_credito);
 
                 movimentoCaixa.setDescricao(editDescricao.getText().toString());
                 boolean isPositivo = radioGroup.getCheckedRadioButtonId() == R.id.radio_entrada;
                 movimentoCaixa.setPositivo(isPositivo);
+
                 try {
                     Date dt = sdf.parse(textView.getText().toString());
                     movimentoCaixa.setData(dt);
@@ -97,6 +109,37 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
                     e.printStackTrace();
                     FirebaseCrash.report(e);
                 }
+
+                BigDecimal _100 = BigDecimal.valueOf(100);
+                BigDecimal number = new BigDecimal(editDinheiro.getText().toString()).multiply(_100);
+                if (!number.equals(BigDecimal.ZERO))
+                    movimentoCaixa.addValor(FormaPagamento.AVista,number.longValue());
+
+                number = new BigDecimal(editCartaoDebito.getText().toString()).multiply(_100);
+                if (!number.equals(BigDecimal.ZERO))
+                    movimentoCaixa.addValor(FormaPagamento.Debito,number.longValue());
+
+                number = new BigDecimal(editCredito1X.getText().toString()).multiply(_100);
+                if (!number.equals(BigDecimal.ZERO))
+                    movimentoCaixa.addValor(FormaPagamento.APrazo1X,number.longValue());
+
+                number = new BigDecimal(editCreditoParcelado.getText().toString()).multiply(_100);
+                if (!number.equals(BigDecimal.ZERO))
+                    movimentoCaixa.addValor(FormaPagamento.APrazo,number.longValue());
+
+                MovimentoCaixaDAO.save(movimentoCaixa).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getActivity(),"Movimento salvo com sucesso!",Toast.LENGTH_SHORT).show();
+                            getFragmentManager().popBackStack();
+                        }else{
+                            Toast.makeText(getActivity(),"Não foi possível salvar o movimento:" + task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                            FirebaseCrash.report(task.getException());
+                        }
+                    }
+                });
+
             }
         };
     }

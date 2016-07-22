@@ -67,6 +67,7 @@ public class MovimentoCaixaDAO {
         Map<String,Object> obj = (Map<String, Object>) dataSnapshot.getValue();
 
         MovimentoCaixa movimentoCaixa = new MovimentoCaixa();
+        movimentoCaixa.setKey(dataSnapshot.getKey());
         movimentoCaixa.setValores((Map<String, Long>) obj.get("valores"));
         movimentoCaixa.setDescricao(String.valueOf(obj.get("descricao")));
         movimentoCaixa.setAtendimentoKey(String.valueOf(obj.get("atendimentoKey")));
