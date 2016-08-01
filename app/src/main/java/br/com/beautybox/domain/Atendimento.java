@@ -22,7 +22,7 @@ public class Atendimento implements Serializable {
     public Atendimento() {
         this.pgmtCartaoDebito = 0;
         this.pgmtCartaoCredito = 0;
-        this.pgmtCartaoCredito1X=0;
+        this.pgmtCartaoCredito1X = 0;
         this.pgmtDinheiro = 0;
         this.desconto = 0;
         this.taxas = 0;

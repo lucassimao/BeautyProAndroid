@@ -80,14 +80,9 @@ public class MovimentoCaixa {
         this.data = data;
     }
 
-    public void addValor(FormaPagamento formaPagamento, long valor) {
+    public void setValor(FormaPagamento formaPagamento, long valor) {
         String key = formaPagamento.name();
-
-        if (valores.containsKey(key)) {
-            valor += valores.get(key);
-            valores.put(key, valor);
-        } else
-            valores.put(key, valor);
+        valores.put(key, valor);
     }
 
     public long getTotal() {

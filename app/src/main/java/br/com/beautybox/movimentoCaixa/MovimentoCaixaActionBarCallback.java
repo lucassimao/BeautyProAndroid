@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,8 +111,19 @@ public class MovimentoCaixaActionBarCallback implements  android.view.ActionMode
 
     @Override
     public void onDestroyActionMode(android.view.ActionMode mode) {
+        FirebaseListAdapter<MovimentoCaixa> adapter = movimentoCaixaListFragment.adapter;
+        MovimentoCaixa mc = adapter.getItem(movimentoCaixaListFragment.currentSelectedItem);
+        final FragmentActivity ctx = movimentoCaixaListFragment.getActivity();
+
+        int color=0;
+
+        if (mc.isPositivo())
+            color = ContextCompat.getColor(ctx,R.color.movimentoPositivo);
+        else
+            color = ContextCompat.getColor(ctx,R.color.movimentoNegativo);
+
         movimentoCaixaListFragment.currentSelectedItem = -1;
-        movimentoCaixaListFragment.viewSelecionado.setBackgroundColor(Color.WHITE);
+        movimentoCaixaListFragment.viewSelecionado.setBackgroundColor(color);
         movimentoCaixaListFragment.viewSelecionado = null;
     }
 }

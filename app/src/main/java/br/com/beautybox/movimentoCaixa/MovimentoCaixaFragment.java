@@ -1,6 +1,8 @@
 package br.com.beautybox.movimentoCaixa;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 import br.com.beautybox.DatePickerFragment;
 import br.com.beautybox.R;
@@ -39,6 +42,7 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
 
     private MovimentoCaixa movimentoCaixa;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private ProgressDialog progressDialog;
 
 
     public static MovimentoCaixaFragment newInstance(MovimentoCaixa movimentoCaixa) {
@@ -60,7 +64,10 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
         EditText editDescricao = (EditText) view.findViewById(R.id.edit_descricao);
         TextView textView = (TextView) view.findViewById(R.id.text_data);
         RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radio_group);
-
+        EditText editDinheiro = (EditText) view.findViewById(R.id.edit_dinheiro);
+        EditText editCartaoDebito = (EditText) view.findViewById(R.id.edit_cartao_debito);
+        EditText editCredito1X = (EditText) view.findViewById(R.id.edit_cartao_credito_1x);
+        EditText editCreditoParcelado = (EditText) view.findViewById(R.id.edit_cartao_credito);
         Button btnCancelar = (Button) view.findViewById(R.id.btn_cancelar);
         Button btnSalvar = (Button) view.findViewById(R.id.btn_salvar);
 
@@ -78,9 +85,28 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
         else
             radioGroup.check(R.id.radio_saida);
 
+        for(Map.Entry<String,Long> entry  : movimentoCaixa.getValores().entrySet()){
+            FormaPagamento formaPagamento = FormaPagamento.valueOf(entry.getKey());
+            String valor = String.valueOf(entry.getValue()/100.0);
+
+            switch (formaPagamento){
+                case AVista:
+                    editDinheiro.setText(valor);
+                    break;
+                case Debito:
+                    editCartaoDebito.setText(valor);
+                    break;
+                case APrazo1X:
+                    editCredito1X.setText(valor);
+                    break;
+                case APrazo:
+                    editCreditoParcelado.setText(valor);
+                    break;
+            }
+        }
+
         btnCancelar.setOnClickListener(onClickCancelar());
         btnSalvar.setOnClickListener(onClickSalvar());
-
 
         return view;
     }
@@ -111,32 +137,41 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
                 }
 
                 BigDecimal _100 = BigDecimal.valueOf(100);
+
                 BigDecimal number = new BigDecimal(editDinheiro.getText().toString()).multiply(_100);
                 if (!number.equals(BigDecimal.ZERO))
-                    movimentoCaixa.addValor(FormaPagamento.AVista,number.longValue());
+                    movimentoCaixa.setValor(FormaPagamento.AVista, number.longValue());
 
                 number = new BigDecimal(editCartaoDebito.getText().toString()).multiply(_100);
                 if (!number.equals(BigDecimal.ZERO))
-                    movimentoCaixa.addValor(FormaPagamento.Debito,number.longValue());
+                    movimentoCaixa.setValor(FormaPagamento.Debito, number.longValue());
 
                 number = new BigDecimal(editCredito1X.getText().toString()).multiply(_100);
                 if (!number.equals(BigDecimal.ZERO))
-                    movimentoCaixa.addValor(FormaPagamento.APrazo1X,number.longValue());
+                    movimentoCaixa.setValor(FormaPagamento.APrazo1X, number.longValue());
 
                 number = new BigDecimal(editCreditoParcelado.getText().toString()).multiply(_100);
                 if (!number.equals(BigDecimal.ZERO))
-                    movimentoCaixa.addValor(FormaPagamento.APrazo,number.longValue());
+                    movimentoCaixa.setValor(FormaPagamento.APrazo, number.longValue());
+
+                progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Registrando movimento ...", true, false);
 
                 MovimentoCaixaDAO.save(movimentoCaixa).addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getActivity(),"Movimento salvo com sucesso!",Toast.LENGTH_SHORT).show();
-                            getFragmentManager().popBackStack();
-                        }else{
-                            Toast.makeText(getActivity(),"Não foi possível salvar o movimento:" + task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                            FirebaseCrash.report(task.getException());
+                        progressDialog.dismiss();
+                        Activity activity = getActivity();
+
+                        if (activity != null) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(activity, "Movimento salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                                getFragmentManager().popBackStack();
+                            } else {
+                                Toast.makeText(activity, "Não foi possível salvar o movimento:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                FirebaseCrash.report(task.getException());
+                            }
                         }
+
                     }
                 });
 
@@ -156,7 +191,7 @@ public class MovimentoCaixaFragment extends Fragment implements DatePickerDialog
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         TextView textView = (TextView) getView().findViewById(R.id.text_data);
-        Date dt = new GregorianCalendar(year,monthOfYear,dayOfMonth).getTime();
+        Date dt = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
 
         textView.setText(sdf.format(dt));
 
