@@ -19,3 +19,6 @@
 -keepattributes Signature
 -ignorewarnings
 -printmapping mapping.txt
+-keepclassmembers class br.com.beautybox.domain.Cliente {
+  *;
+}
