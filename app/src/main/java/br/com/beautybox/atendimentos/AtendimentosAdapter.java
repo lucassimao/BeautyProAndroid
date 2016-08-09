@@ -271,13 +271,9 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
             grupos.clear();
             sessoes.clear();
 
-            // o evento é disparado em cima do bucket e todos os filhos são enviados, tem que iterar p/ ler os filhos
-            for (DataSnapshot bucket : dataSnapshot.getChildren()) {
-
-                for (DataSnapshot child : bucket.getChildren()) {
-                    Atendimento atendimento = AtendimentoDAO.load(child);
-                    adicionarSessoes(atendimento);
-                }
+            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                Atendimento atendimento = AtendimentoDAO.load(child);
+                adicionarSessoes(atendimento);
             }
 
             // ordenar os grupos por ordem decrescente
@@ -306,8 +302,13 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
 
         private void adicionarSessoes(Atendimento atendimento) {
 
+            long now = System.currentTimeMillis();
+
             for (Sessao sessao : atendimento.getSessoes()) {
                 long sessaoTimestamp = sessao.getTimestamp();
+                // Pode ser que o atendimento tenha sessoes que ja passaram. Se ja passou, ignora
+                if (sessaoTimestamp < now) continue;
+
                 long grupo = clearTimeFields(sessaoTimestamp);
 
                 if (!sessoes.containsKey(grupo)) {

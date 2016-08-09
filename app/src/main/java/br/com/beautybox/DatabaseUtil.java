@@ -11,7 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 /**
  * Created by lsimaocosta on 18/07/16.
@@ -39,17 +38,20 @@ public class DatabaseUtil {
      * @param date
      * @return timestamp
      */
-    public static final String date2Bucket(Date date) {
-        TimeZone timeZone = TimeZone.getTimeZone("Etc/UTC");
-        Calendar c = GregorianCalendar.getInstance(timeZone);
+    public static final long getMonthTimestamp(Date date) {
+        Calendar c = GregorianCalendar.getInstance();
         c.setTime(date);
         c.set(Calendar.DAY_OF_MONTH, 1);
-        c.clear(Calendar.HOUR_OF_DAY);
+        c.set(Calendar.HOUR_OF_DAY,0);
         c.clear(Calendar.HOUR);
         c.clear(Calendar.MINUTE);
         c.clear(Calendar.SECOND);
         c.clear(Calendar.MILLISECOND);
 
-        return String.valueOf(c.getTimeInMillis());
+        return c.getTimeInMillis();
+    }
+
+    public static long getCurrentMonthTimestamp() {
+        return getMonthTimestamp(new Date());
     }
 }

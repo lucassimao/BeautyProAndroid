@@ -33,10 +33,8 @@ public class AtendimentoDAO {
     private static final String TAG = AtendimentoDAO.class.getSimpleName();
 
     /**
-     * os atendimentos são organizados a partir de "buckets" que
-     * representam organizam os atendimentos por mes e ano
      *
-     * Lista os atendimentos do bucket atual
+     * Lista os atendimentos agendados
      *
      * @return
      */
@@ -45,9 +43,12 @@ public class AtendimentoDAO {
     }
 
     public static Query list(ValueEventListener valueEventListener) {
-        String currentBucket = DatabaseUtil.date2Bucket(new Date());
+        long currentMonthTimestamp = DatabaseUtil.getCurrentMonthTimestamp();
 
-        Query query = DatabaseUtil.root().child(FIREBASE_NODE).orderByKey().startAt(currentBucket);
+        Query query = DatabaseUtil.root().child(FIREBASE_NODE)
+                .orderByChild("timestampUltimaSessao")
+                .startAt(currentMonthTimestamp);
+
         if (valueEventListener != null)
             query.addListenerForSingleValueEvent(valueEventListener);
 
@@ -73,14 +74,14 @@ public class AtendimentoDAO {
         else
             atendimento.setDateUpdated(new Date());
 
-        String bucket = DatabaseUtil.date2Bucket(atendimento.getDateCreated());
         String atendimentoKey = atendimento.getKey();
 
-        if (TextUtils.isEmpty(atendimentoKey))
-            atendimentoKey = instance.child(FIREBASE_NODE).child(bucket).push().getKey();
+        if (TextUtils.isEmpty(atendimentoKey)) {
+            atendimentoKey = instance.child(FIREBASE_NODE).push().getKey();
+            atendimento.setKey(atendimentoKey);
+        }
 
-        String atendimentoPath = String.format("/%s/%s/%s", FIREBASE_NODE, bucket, atendimentoKey);
-
+        String atendimentoPath = String.format("/%s/%s", FIREBASE_NODE, atendimentoKey);
         childUpdates.put(atendimentoPath, toMap(atendimento));
 
         return instance.updateChildren(childUpdates);
@@ -193,11 +194,17 @@ public class AtendimentoDAO {
     private static Map<String, Object> toMap(Atendimento atendimento) {
         Map<String, Object> map = new HashMap<>();
 
+        long timestampUltimaSessao = 0;
+
         List<Map<String, Object>> sessoes = new LinkedList<>();
-        for (Sessao sessao : atendimento.getSessoes())
+        for (Sessao sessao : atendimento.getSessoes()) {
             sessoes.add(toMap(sessao));
+            if (timestampUltimaSessao <  sessao.getTimestamp())
+                timestampUltimaSessao = sessao.getTimestamp();
+        }
 
         map.put("sessoes", sessoes);
+        map.put("timestampUltimaSessao", timestampUltimaSessao);
         map.put("clienteKey", atendimento.getCliente().getKey());
         map.put("formaPagamento", atendimento.getFormaPagamento().name());
         map.put("pgmtCartaoDebito", atendimento.getPgmtCartaoDebito());
@@ -244,8 +251,7 @@ public class AtendimentoDAO {
     }
 
     public static DatabaseReference getRef(Atendimento atendimento) {
-        String bucket = DatabaseUtil.date2Bucket(atendimento.getDateCreated());
-        return DatabaseUtil.root().child(FIREBASE_NODE).child(bucket).child(atendimento.getKey()).getRef();
+        return DatabaseUtil.root().child(FIREBASE_NODE).child(atendimento.getKey()).getRef();
     }
 
 }

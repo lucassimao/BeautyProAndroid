@@ -23,9 +23,9 @@ public class MovimentoCaixaDAO {
 
     public static DatabaseReference getCurrent() {
         DatabaseReference root = DatabaseUtil.root();
-        String caixaAtual = DatabaseUtil.date2Bucket(new Date());
+        Long caixaAtual = DatabaseUtil.getMonthTimestamp(new Date());
 
-        return root.child(FIREBASE_NODE).child(caixaAtual);
+        return root.child(FIREBASE_NODE).child(caixaAtual.toString());
     }
 
     public static Query list(){
