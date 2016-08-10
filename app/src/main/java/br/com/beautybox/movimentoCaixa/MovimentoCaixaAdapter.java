@@ -54,7 +54,7 @@ public class MovimentoCaixaAdapter extends FirebaseListAdapter<MovimentoCaixa> {
 
     @Override
     protected MovimentoCaixa parseSnapshot(DataSnapshot snapshot) {
-        return MovimentoCaixaDAO.load(snapshot);
+        return MovimentoCaixaDAO.parseSnapshot(snapshot);
     }
 
 

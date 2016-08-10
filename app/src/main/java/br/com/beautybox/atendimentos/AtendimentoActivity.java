@@ -53,7 +53,7 @@ public class AtendimentoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Servico servico = ServicoDAO.load(child);
+                    Servico servico = ServicoDAO.parseSnapshot(child);
                     servicoMap.put(child.getKey(), servico);
                 }
             }

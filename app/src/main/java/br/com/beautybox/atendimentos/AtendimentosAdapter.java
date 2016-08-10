@@ -81,7 +81,7 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Servico servico = ServicoDAO.load(child);
+                    Servico servico = ServicoDAO.parseSnapshot(child);
                     servicos.put(servico.getKey(), servico);
                 }
             }
@@ -211,7 +211,7 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
             ClienteDAO.find(cliente.getKey(), new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Cliente cliente = ClienteDAO.load(dataSnapshot);
+                    Cliente cliente = ClienteDAO.parseSnapshot(dataSnapshot);
                     textViewCliente.setText(cliente.getNome());
 
                     // substituindo o lazy object pelo objeto carregado por completo
@@ -269,7 +269,7 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
             sessoes.clear();
 
             for (DataSnapshot child : dataSnapshot.getChildren()) {
-                Atendimento atendimento = AtendimentoDAO.load(child);
+                Atendimento atendimento = AtendimentoDAO.parseSnapshot(child);
                 adicionarSessoes(atendimento);
             }
 

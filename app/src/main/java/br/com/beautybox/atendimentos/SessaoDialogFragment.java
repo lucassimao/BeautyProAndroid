@@ -164,7 +164,7 @@ public class SessaoDialogFragment extends DialogFragment implements DatePickerDi
                 List<Servico> servicos = new ArrayList<Servico>();
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    servicos.add(ServicoDAO.load(child));
+                    servicos.add(ServicoDAO.parseSnapshot(child));
                 }
 
                 int layout = android.R.layout.simple_spinner_dropdown_item;

@@ -92,7 +92,7 @@ public class AtendimentoDAO {
     }
 
 
-    public static Atendimento load(DataSnapshot child) {
+    public static Atendimento parseSnapshot(DataSnapshot child) {
         Map<String, Object> map = (Map<String, Object>) child.getValue();
         Atendimento atendimento = new Atendimento();
 
@@ -124,7 +124,7 @@ public class AtendimentoDAO {
 
             sessoes.add(sessao);
         } else
-            sessoes = load((List<Map<String, Object>>) map.get("sessoes"), atendimento);
+            sessoes = loadSessoes((List<Map<String, Object>>) map.get("sessoes"), atendimento);
 
         atendimento.setSessoes(sessoes);
 
@@ -162,7 +162,7 @@ public class AtendimentoDAO {
         return atendimento;
     }
 
-    private static List<Sessao> load(List<Map<String, Object>> sessoes, Atendimento atendimento) {
+    private static List<Sessao> loadSessoes(List<Map<String, Object>> sessoes, Atendimento atendimento) {
         List<Sessao> sessaoList = new ArrayList<>();
 
         for (Map<String, Object> map : sessoes) {

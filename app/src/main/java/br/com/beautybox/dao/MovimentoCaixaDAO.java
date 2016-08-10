@@ -63,7 +63,7 @@ public class MovimentoCaixaDAO {
         return map;
     }
 
-    public static MovimentoCaixa load(DataSnapshot dataSnapshot){
+    public static MovimentoCaixa parseSnapshot(DataSnapshot dataSnapshot){
         Map<String,Object> obj = (Map<String, Object>) dataSnapshot.getValue();
 
         MovimentoCaixa movimentoCaixa = new MovimentoCaixa();

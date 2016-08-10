@@ -5,11 +5,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 
 import java.math.BigDecimal;
 
 import br.com.beautybox.R;
+import br.com.beautybox.dao.ServicoDAO;
 import br.com.beautybox.domain.Servico;
 
 /**
@@ -19,6 +21,11 @@ public class ServicosAdapter extends FirebaseListAdapter<Servico> {
 
     public ServicosAdapter(Activity activity, Query ref) {
         super(activity, Servico.class,R.layout.list_item_servicos,ref);
+    }
+
+    @Override
+    protected Servico parseSnapshot(DataSnapshot snapshot) {
+        return ServicoDAO.parseSnapshot(snapshot);
     }
 
     @Override

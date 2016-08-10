@@ -33,8 +33,6 @@ public class ServicoDAO {
     }
 
     public static Task<Void> update(DatabaseReference ref, Servico servico) {
-        Log.d(TAG, ref.toString());
-
         Map<String, Object> map = new HashMap<>();
         map.put("descricao", servico.getDescricao());
         map.put("valorAVista", servico.getValorAVista());
@@ -57,7 +55,7 @@ public class ServicoDAO {
         return query;
     }
 
-    public static Servico load(DataSnapshot child) {
+    public static Servico parseSnapshot(DataSnapshot child) {
 
         Map<String,Object> map = (Map<String, Object>) child.getValue();
         Servico servico = new Servico();

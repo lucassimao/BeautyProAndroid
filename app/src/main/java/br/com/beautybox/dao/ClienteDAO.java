@@ -56,7 +56,7 @@ public class ClienteDAO {
         return map;
     }
 
-    public static Cliente load(DataSnapshot dataSnapshot) {
+    public static Cliente parseSnapshot(DataSnapshot dataSnapshot) {
         Cliente cliente = dataSnapshot.getValue(Cliente.class);
         cliente.setKey(dataSnapshot.getKey());
         return cliente;
