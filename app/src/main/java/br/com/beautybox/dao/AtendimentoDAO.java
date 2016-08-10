@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import br.com.beautybox.DatabaseUtil;
+import br.com.beautybox.Util;
 import br.com.beautybox.domain.Atendimento;
 import br.com.beautybox.domain.Cliente;
 import br.com.beautybox.domain.FormaPagamento;
@@ -43,9 +43,9 @@ public class AtendimentoDAO {
     }
 
     public static Query list(ValueEventListener valueEventListener) {
-        long currentMonthTimestamp = DatabaseUtil.getCurrentMonthTimestamp();
+        long currentMonthTimestamp = Util.getCurrentMonthTimestamp();
 
-        Query query = DatabaseUtil.root().child(FIREBASE_NODE)
+        Query query = Util.databaseRoot().child(FIREBASE_NODE)
                 .orderByChild("timestampUltimaSessao")
                 .startAt(currentMonthTimestamp);
 
@@ -56,7 +56,7 @@ public class AtendimentoDAO {
     }
 
     public static Task<Void> save(Atendimento atendimento) {
-        DatabaseReference instance = DatabaseUtil.root();
+        DatabaseReference instance = Util.databaseRoot();
 
         Map<String, Object> childUpdates = new HashMap<>();
         String clienteKey = atendimento.getCliente().getKey();
@@ -251,7 +251,7 @@ public class AtendimentoDAO {
     }
 
     public static DatabaseReference getRef(Atendimento atendimento) {
-        return DatabaseUtil.root().child(FIREBASE_NODE).child(atendimento.getKey()).getRef();
+        return Util.databaseRoot().child(FIREBASE_NODE).child(atendimento.getKey()).getRef();
     }
 
 }

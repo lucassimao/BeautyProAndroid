@@ -9,14 +9,14 @@ android {
             storePassword '123456'
         }
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "br.com.beautybox"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 21
         versionCode 3
-        versionName "0.5-dev"
+        versionName "0.5"
         signingConfig signingConfigs.config
     }
     buildTypes {
@@ -32,6 +32,12 @@ android {
         }
     }
     productFlavors {
+        dev {
+            versionName defaultConfig.versionName + '-dev'
+        }
+        beta {
+            versionName defaultConfig.versionName + '-beta ' + new Date().format('dd/MM/yyyy HH:mm:ss')
+        }
     }
 }
 
@@ -41,10 +47,10 @@ dependencies {
     compile 'com.google.firebase:firebase-database:9.0.0'
     compile 'com.google.firebase:firebase-crash:9.0.0'
     compile 'com.firebaseui:firebase-ui:0.4.1'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:recyclerview-v7:24.1.1'
 }
 
 

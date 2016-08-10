@@ -31,9 +31,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import br.com.beautybox.R;
+import br.com.beautybox.Util;
 import br.com.beautybox.dao.AtendimentoDAO;
 import br.com.beautybox.dao.ClienteDAO;
 import br.com.beautybox.dao.ServicoDAO;
@@ -55,7 +55,6 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
     private final DateFormat groupFormatter;
     private final DateFormat hourFormatter;
     private final Query queryAtendimentos;
-    private TimeZone timeZone = TimeZone.getTimeZone("Etc/UTC");
     private AtendimentoListener atendimentoListener = new AtendimentoListener();
 
     // timestamps dos dias que tem atendimento
@@ -75,8 +74,6 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
 
         groupFormatter = new SimpleDateFormat("dd/MM/yyyy - EEEE");
         hourFormatter = new SimpleDateFormat("HH:mm");
-
-        groupFormatter.setTimeZone(timeZone);
 
         // carregando os serviços previamente
         ServicoDAO.list(new ValueEventListener() {
@@ -302,12 +299,12 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
 
         private void adicionarSessoes(Atendimento atendimento) {
 
-            long now = System.currentTimeMillis();
+            long currentMonthTimestamp = Util.getCurrentMonthTimestamp();
 
             for (Sessao sessao : atendimento.getSessoes()) {
                 long sessaoTimestamp = sessao.getTimestamp();
-                // Pode ser que o atendimento tenha sessoes que ja passaram. Se ja passou, ignora
-                if (sessaoTimestamp < now) continue;
+                // Pode ser que o atendimento tenha sessoes que sao do mês anterior. Se for, ignora
+                if (sessaoTimestamp < currentMonthTimestamp) continue;
 
                 long grupo = clearTimeFields(sessaoTimestamp);
 
@@ -321,9 +318,10 @@ public class AtendimentosAdapter extends BaseExpandableListAdapter {
         }
 
         private long clearTimeFields(long dataHorario) {
-            Calendar c = GregorianCalendar.getInstance(timeZone);
+            Calendar c = GregorianCalendar.getInstance();
             c.setTimeInMillis(dataHorario);
-            c.clear(Calendar.HOUR_OF_DAY);
+            c.set(Calendar.HOUR_OF_DAY,0);
+            c.clear(Calendar.HOUR);
             c.clear(Calendar.HOUR);
             c.clear(Calendar.MINUTE);
             c.clear(Calendar.SECOND);

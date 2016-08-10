@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.beautybox.DatabaseUtil;
+import br.com.beautybox.Util;
 import br.com.beautybox.domain.MovimentoCaixa;
 
 /**
@@ -22,8 +22,8 @@ public class MovimentoCaixaDAO {
     private static final String FIREBASE_NODE = "caixas";
 
     public static DatabaseReference getCurrent() {
-        DatabaseReference root = DatabaseUtil.root();
-        Long caixaAtual = DatabaseUtil.getMonthTimestamp(new Date());
+        DatabaseReference root = Util.databaseRoot();
+        Long caixaAtual = Util.getMonthTimestamp(new Date());
 
         return root.child(FIREBASE_NODE).child(caixaAtual.toString());
     }

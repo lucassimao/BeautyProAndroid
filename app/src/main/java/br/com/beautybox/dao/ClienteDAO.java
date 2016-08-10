@@ -10,7 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.beautybox.DatabaseUtil;
+import br.com.beautybox.Util;
 import br.com.beautybox.domain.Cliente;
 
 /**
@@ -21,7 +21,7 @@ public class ClienteDAO {
     public static final String FIREBASE_NODE = "clientes";
 
     public static Task<Void> save(Cliente cliente) {
-        DatabaseReference ref = DatabaseUtil.root().child(FIREBASE_NODE);
+        DatabaseReference ref = Util.databaseRoot().child(FIREBASE_NODE);
 
         if (TextUtils.isEmpty(cliente.getKey()))
             return ref.push().setValue(cliente);
@@ -30,7 +30,7 @@ public class ClienteDAO {
     }
 
     public static void find(String key, ValueEventListener valueEventListener) {
-        DatabaseReference ref = DatabaseUtil.root().child(FIREBASE_NODE).child(key);
+        DatabaseReference ref = Util.databaseRoot().child(FIREBASE_NODE).child(key);
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 

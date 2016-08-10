@@ -15,14 +15,14 @@ import java.util.GregorianCalendar;
 /**
  * Created by lsimaocosta on 18/07/16.
  */
-public class DatabaseUtil {
+public class Util {
 
-    private static final String TAG = DatabaseUtil.class.getSimpleName();
+    private static final String TAG = Util.class.getSimpleName();
 
-    public static DatabaseReference root() {
+    public static DatabaseReference databaseRoot() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
-            FirebaseCrash.logcat(Log.DEBUG, TAG, "metodo DatabaseUtil.root() sendo chamado sem usuario logado!");
+            FirebaseCrash.logcat(Log.DEBUG, TAG, "metodo Util.databaseRoot() sendo chamado sem usuario logado!");
             return null;
         }
 
@@ -32,8 +32,7 @@ public class DatabaseUtil {
     }
 
     /**
-     * Dado uma data, determina o timestamp do bucket em que o objeto
-     * requisitante deve ser armazenado
+     * Dada uma data, determina o timestamp para o 1º dia do mês às 00:00:00     *
      *
      * @param date
      * @return timestamp
@@ -51,6 +50,10 @@ public class DatabaseUtil {
         return c.getTimeInMillis();
     }
 
+    /**
+     * Retorna o timestamp para o 1º dia do mês corrente às 00:00:00
+     * @return
+     */
     public static long getCurrentMonthTimestamp() {
         return getMonthTimestamp(new Date());
     }

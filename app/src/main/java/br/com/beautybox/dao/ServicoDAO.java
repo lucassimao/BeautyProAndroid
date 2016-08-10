@@ -11,7 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.beautybox.DatabaseUtil;
+import br.com.beautybox.Util;
 import br.com.beautybox.domain.Servico;
 
 /**
@@ -24,7 +24,7 @@ public class ServicoDAO {
 
 
     public static Task<Void> save(Servico servico) {
-        DatabaseReference ref = DatabaseUtil.root().child(FIREBASE_NODE);
+        DatabaseReference ref = Util.databaseRoot().child(FIREBASE_NODE);
         return ref.push().setValue(servico);
     }
 
@@ -49,7 +49,7 @@ public class ServicoDAO {
     }
 
     public static Query list(ValueEventListener valueEventListener) {
-        Query query = DatabaseUtil.root().child(FIREBASE_NODE).orderByChild("descricao");
+        Query query = Util.databaseRoot().child(FIREBASE_NODE).orderByChild("descricao");
 
         if (valueEventListener != null)
             query.addListenerForSingleValueEvent(valueEventListener);
