@@ -1,13 +1,10 @@
-### Git flow ###
+# BeautyPro
 
-* git checkout -b working
-* git commit -a -m "wp" ....
-* git push origin working
+Android app for beauty clinic BeautyBox ( https://www.instagram.com/beautyboxthe/ )
+This app is in use and the business owners use this software in a daily basis from their Android phones.
 
-......
-
-* git checkout master
-* git merge --squash working
-* git tag <tag>
-* git push --follow-tags origin master
-* git push origin --delete working
+Main Functionalities:
+  - Customer base management
+  - Appointment scheduling
+  - Uses Google's Firebase Realtime Database as storage medium. Keeps all customer and appointment data synchronized between business owners Android phones.
+  - Cash flow management ( in development )
